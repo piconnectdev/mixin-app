@@ -101,9 +101,10 @@ Future<void> _download(_AttachmentDownloadJobOption options) async {
         if (options.keys != null && options.digest != null) {
           _stream = _stream.decrypt(options.keys!, options.digest!, total);
         }
-        return _stream.doOnData((event) {
+        return _stream.map((event) {
           received += event.length;
           options.sendPort.send(Tuple2(received, total));
+          return event;
         });
       },
       cancelToken: cancelToken,
@@ -132,10 +133,10 @@ extension _AttachmentDownloadExtension on Dio {
   }) async {
     // We set the `responseType` to [ResponseType.STREAM] to retrieve the
     // response stream.
-    options ??= DioMixin.checkOptions('GET', options);
-
-    // Receive data with stream.
-    options.responseType = ResponseType.stream;
+    options ??= Options();
+    options
+      ..method = 'GET'
+      ..responseType = ResponseType.stream;
     Response<ResponseBody> response;
     try {
       response = await request<ResponseBody>(
@@ -212,8 +213,9 @@ extension _AttachmentDownloadExtension on Dio {
           try {
             await subscription.cancel();
           } finally {
-            completer.completeError(DioMixin.assureDioError(
-                err, response.requestOptions, stackTrace));
+            completer.completeError(
+                // ignore: invalid_use_of_internal_member
+                DioMixin.assureDioError(err, response.requestOptions));
           }
         });
       },
@@ -223,11 +225,11 @@ extension _AttachmentDownloadExtension on Dio {
           closed = true;
           await raf.close();
           completer.complete(response);
-        } catch (e, stack) {
+        } catch (e) {
+          // ignore: invalid_use_of_internal_member
           completer.completeError(DioMixin.assureDioError(
             e,
             response.requestOptions,
-            stack,
           ));
         }
       },
@@ -235,8 +237,9 @@ extension _AttachmentDownloadExtension on Dio {
         try {
           await _closeAndDelete();
         } finally {
-          completer.completeError(DioMixin.assureDioError(
-              e, response.requestOptions, StackTrace.current));
+          completer.completeError(
+              // ignore: invalid_use_of_internal_member
+              DioMixin.assureDioError(e, response.requestOptions));
         }
       },
       cancelOnError: true,
@@ -271,6 +274,7 @@ extension _AttachmentDownloadExtension on Dio {
         }
       });
     }
+    // ignore: invalid_use_of_internal_member
     return DioMixin.listenCancelForAsyncTask(cancelToken, future);
   }
 }

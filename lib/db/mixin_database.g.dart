@@ -160,15 +160,18 @@ class FavoriteAppsCompanion extends UpdateCompanion<FavoriteApp> {
   final Value<String> appId;
   final Value<String> userId;
   final Value<DateTime> createdAt;
+  final Value<int> rowid;
   const FavoriteAppsCompanion({
     this.appId = const Value.absent(),
     this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   FavoriteAppsCompanion.insert({
     required String appId,
     required String userId,
     required DateTime createdAt,
+    this.rowid = const Value.absent(),
   })  : appId = Value(appId),
         userId = Value(userId),
         createdAt = Value(createdAt);
@@ -176,22 +179,26 @@ class FavoriteAppsCompanion extends UpdateCompanion<FavoriteApp> {
     Expression<String>? appId,
     Expression<String>? userId,
     Expression<int>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (appId != null) 'app_id': appId,
       if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   FavoriteAppsCompanion copyWith(
       {Value<String>? appId,
       Value<String>? userId,
-      Value<DateTime>? createdAt}) {
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
     return FavoriteAppsCompanion(
       appId: appId ?? this.appId,
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -208,6 +215,9 @@ class FavoriteAppsCompanion extends UpdateCompanion<FavoriteApp> {
       final converter = FavoriteApps.$convertercreatedAt;
       map['created_at'] = Variable<int>(converter.toSql(createdAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -216,7 +226,8 @@ class FavoriteAppsCompanion extends UpdateCompanion<FavoriteApp> {
     return (StringBuffer('FavoriteAppsCompanion(')
           ..write('appId: $appId, ')
           ..write('userId: $userId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -691,6 +702,7 @@ class AppsCompanion extends UpdateCompanion<App> {
   final Value<String> creatorId;
   final Value<String?> resourcePatterns;
   final Value<DateTime?> updatedAt;
+  final Value<int> rowid;
   const AppsCompanion({
     this.appId = const Value.absent(),
     this.appNumber = const Value.absent(),
@@ -705,6 +717,7 @@ class AppsCompanion extends UpdateCompanion<App> {
     this.creatorId = const Value.absent(),
     this.resourcePatterns = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   AppsCompanion.insert({
     required String appId,
@@ -720,6 +733,7 @@ class AppsCompanion extends UpdateCompanion<App> {
     required String creatorId,
     this.resourcePatterns = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : appId = Value(appId),
         appNumber = Value(appNumber),
         homeUri = Value(homeUri),
@@ -743,6 +757,7 @@ class AppsCompanion extends UpdateCompanion<App> {
     Expression<String>? creatorId,
     Expression<String>? resourcePatterns,
     Expression<int>? updatedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (appId != null) 'app_id': appId,
@@ -758,6 +773,7 @@ class AppsCompanion extends UpdateCompanion<App> {
       if (creatorId != null) 'creator_id': creatorId,
       if (resourcePatterns != null) 'resource_patterns': resourcePatterns,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -774,7 +790,8 @@ class AppsCompanion extends UpdateCompanion<App> {
       Value<String?>? capabilities,
       Value<String>? creatorId,
       Value<String?>? resourcePatterns,
-      Value<DateTime?>? updatedAt}) {
+      Value<DateTime?>? updatedAt,
+      Value<int>? rowid}) {
     return AppsCompanion(
       appId: appId ?? this.appId,
       appNumber: appNumber ?? this.appNumber,
@@ -789,6 +806,7 @@ class AppsCompanion extends UpdateCompanion<App> {
       creatorId: creatorId ?? this.creatorId,
       resourcePatterns: resourcePatterns ?? this.resourcePatterns,
       updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -835,6 +853,9 @@ class AppsCompanion extends UpdateCompanion<App> {
       final converter = Apps.$converterupdatedAtn;
       map['updated_at'] = Variable<int>(converter.toSql(updatedAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -853,7 +874,8 @@ class AppsCompanion extends UpdateCompanion<App> {
           ..write('capabilities: $capabilities, ')
           ..write('creatorId: $creatorId, ')
           ..write('resourcePatterns: $resourcePatterns, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -996,30 +1018,36 @@ class StickerRelationshipsCompanion
     extends UpdateCompanion<StickerRelationship> {
   final Value<String> albumId;
   final Value<String> stickerId;
+  final Value<int> rowid;
   const StickerRelationshipsCompanion({
     this.albumId = const Value.absent(),
     this.stickerId = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   StickerRelationshipsCompanion.insert({
     required String albumId,
     required String stickerId,
+    this.rowid = const Value.absent(),
   })  : albumId = Value(albumId),
         stickerId = Value(stickerId);
   static Insertable<StickerRelationship> custom({
     Expression<String>? albumId,
     Expression<String>? stickerId,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (albumId != null) 'album_id': albumId,
       if (stickerId != null) 'sticker_id': stickerId,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   StickerRelationshipsCompanion copyWith(
-      {Value<String>? albumId, Value<String>? stickerId}) {
+      {Value<String>? albumId, Value<String>? stickerId, Value<int>? rowid}) {
     return StickerRelationshipsCompanion(
       albumId: albumId ?? this.albumId,
       stickerId: stickerId ?? this.stickerId,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1032,6 +1060,9 @@ class StickerRelationshipsCompanion
     if (stickerId.present) {
       map['sticker_id'] = Variable<String>(stickerId.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -1039,7 +1070,8 @@ class StickerRelationshipsCompanion
   String toString() {
     return (StringBuffer('StickerRelationshipsCompanion(')
           ..write('albumId: $albumId, ')
-          ..write('stickerId: $stickerId')
+          ..write('stickerId: $stickerId, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1460,6 +1492,7 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
   final Value<String?> banner;
   final Value<bool?> added;
   final Value<bool> isVerified;
+  final Value<int> rowid;
   const StickerAlbumsCompanion({
     this.albumId = const Value.absent(),
     this.name = const Value.absent(),
@@ -1473,6 +1506,7 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
     this.banner = const Value.absent(),
     this.added = const Value.absent(),
     this.isVerified = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   StickerAlbumsCompanion.insert({
     required String albumId,
@@ -1487,6 +1521,7 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
     this.banner = const Value.absent(),
     this.added = const Value.absent(),
     this.isVerified = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : albumId = Value(albumId),
         name = Value(name),
         iconUrl = Value(iconUrl),
@@ -1508,6 +1543,7 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
     Expression<String>? banner,
     Expression<bool>? added,
     Expression<bool>? isVerified,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (albumId != null) 'album_id': albumId,
@@ -1522,6 +1558,7 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
       if (banner != null) 'banner': banner,
       if (added != null) 'added': added,
       if (isVerified != null) 'is_verified': isVerified,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -1537,7 +1574,8 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
       Value<String>? description,
       Value<String?>? banner,
       Value<bool?>? added,
-      Value<bool>? isVerified}) {
+      Value<bool>? isVerified,
+      Value<int>? rowid}) {
     return StickerAlbumsCompanion(
       albumId: albumId ?? this.albumId,
       name: name ?? this.name,
@@ -1551,6 +1589,7 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
       banner: banner ?? this.banner,
       added: added ?? this.added,
       isVerified: isVerified ?? this.isVerified,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1595,6 +1634,9 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
     if (isVerified.present) {
       map['is_verified'] = Variable<bool>(isVerified.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -1612,7 +1654,8 @@ class StickerAlbumsCompanion extends UpdateCompanion<StickerAlbum> {
           ..write('description: $description, ')
           ..write('banner: $banner, ')
           ..write('added: $added, ')
-          ..write('isVerified: $isVerified')
+          ..write('isVerified: $isVerified, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1782,15 +1825,18 @@ class PinMessagesCompanion extends UpdateCompanion<PinMessage> {
   final Value<String> messageId;
   final Value<String> conversationId;
   final Value<DateTime> createdAt;
+  final Value<int> rowid;
   const PinMessagesCompanion({
     this.messageId = const Value.absent(),
     this.conversationId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   PinMessagesCompanion.insert({
     required String messageId,
     required String conversationId,
     required DateTime createdAt,
+    this.rowid = const Value.absent(),
   })  : messageId = Value(messageId),
         conversationId = Value(conversationId),
         createdAt = Value(createdAt);
@@ -1798,22 +1844,26 @@ class PinMessagesCompanion extends UpdateCompanion<PinMessage> {
     Expression<String>? messageId,
     Expression<String>? conversationId,
     Expression<int>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (messageId != null) 'message_id': messageId,
       if (conversationId != null) 'conversation_id': conversationId,
       if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   PinMessagesCompanion copyWith(
       {Value<String>? messageId,
       Value<String>? conversationId,
-      Value<DateTime>? createdAt}) {
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
     return PinMessagesCompanion(
       messageId: messageId ?? this.messageId,
       conversationId: conversationId ?? this.conversationId,
       createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1830,6 +1880,9 @@ class PinMessagesCompanion extends UpdateCompanion<PinMessage> {
       final converter = PinMessages.$convertercreatedAt;
       map['created_at'] = Variable<int>(converter.toSql(createdAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -1838,7 +1891,8 @@ class PinMessagesCompanion extends UpdateCompanion<PinMessage> {
     return (StringBuffer('PinMessagesCompanion(')
           ..write('messageId: $messageId, ')
           ..write('conversationId: $conversationId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2502,6 +2556,7 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
   final Value<String?> draft;
   final Value<DateTime?> muteUntil;
   final Value<int?> expireIn;
+  final Value<int> rowid;
   const ConversationsCompanion({
     this.conversationId = const Value.absent(),
     this.ownerId = const Value.absent(),
@@ -2521,6 +2576,7 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
     this.draft = const Value.absent(),
     this.muteUntil = const Value.absent(),
     this.expireIn = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ConversationsCompanion.insert({
     required String conversationId,
@@ -2541,6 +2597,7 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
     this.draft = const Value.absent(),
     this.muteUntil = const Value.absent(),
     this.expireIn = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : conversationId = Value(conversationId),
         createdAt = Value(createdAt),
         status = Value(status);
@@ -2563,6 +2620,7 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
     Expression<String>? draft,
     Expression<int>? muteUntil,
     Expression<int>? expireIn,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (conversationId != null) 'conversation_id': conversationId,
@@ -2585,6 +2643,7 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
       if (draft != null) 'draft': draft,
       if (muteUntil != null) 'mute_until': muteUntil,
       if (expireIn != null) 'expire_in': expireIn,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -2606,7 +2665,8 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
       Value<ConversationStatus>? status,
       Value<String?>? draft,
       Value<DateTime?>? muteUntil,
-      Value<int?>? expireIn}) {
+      Value<int?>? expireIn,
+      Value<int>? rowid}) {
     return ConversationsCompanion(
       conversationId: conversationId ?? this.conversationId,
       ownerId: ownerId ?? this.ownerId,
@@ -2626,6 +2686,7 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
       draft: draft ?? this.draft,
       muteUntil: muteUntil ?? this.muteUntil,
       expireIn: expireIn ?? this.expireIn,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -2693,6 +2754,9 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
     if (expireIn.present) {
       map['expire_in'] = Variable<int>(expireIn.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -2716,7 +2780,8 @@ class ConversationsCompanion extends UpdateCompanion<Conversation> {
           ..write('status: $status, ')
           ..write('draft: $draft, ')
           ..write('muteUntil: $muteUntil, ')
-          ..write('expireIn: $expireIn')
+          ..write('expireIn: $expireIn, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -3760,6 +3825,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
   final Value<String?> quoteContent;
   final Value<String?> thumbUrl;
   final Value<String?> caption;
+  final Value<int> rowid;
   const MessagesCompanion({
     this.messageId = const Value.absent(),
     this.conversationId = const Value.absent(),
@@ -3792,6 +3858,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     this.quoteContent = const Value.absent(),
     this.thumbUrl = const Value.absent(),
     this.caption = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MessagesCompanion.insert({
     required String messageId,
@@ -3825,6 +3892,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     this.quoteContent = const Value.absent(),
     this.thumbUrl = const Value.absent(),
     this.caption = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : messageId = Value(messageId),
         conversationId = Value(conversationId),
         userId = Value(userId),
@@ -3863,6 +3931,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     Expression<String>? quoteContent,
     Expression<String>? thumbUrl,
     Expression<String>? caption,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (messageId != null) 'message_id': messageId,
@@ -3896,6 +3965,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       if (quoteContent != null) 'quote_content': quoteContent,
       if (thumbUrl != null) 'thumb_url': thumbUrl,
       if (caption != null) 'caption': caption,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -3930,7 +4000,8 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       Value<String?>? quoteMessageId,
       Value<String?>? quoteContent,
       Value<String?>? thumbUrl,
-      Value<String?>? caption}) {
+      Value<String?>? caption,
+      Value<int>? rowid}) {
     return MessagesCompanion(
       messageId: messageId ?? this.messageId,
       conversationId: conversationId ?? this.conversationId,
@@ -3963,6 +4034,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       quoteContent: quoteContent ?? this.quoteContent,
       thumbUrl: thumbUrl ?? this.thumbUrl,
       caption: caption ?? this.caption,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -4066,6 +4138,9 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     if (caption.present) {
       map['caption'] = Variable<String>(caption.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -4102,7 +4177,8 @@ class MessagesCompanion extends UpdateCompanion<Message> {
           ..write('quoteMessageId: $quoteMessageId, ')
           ..write('quoteContent: $quoteContent, ')
           ..write('thumbUrl: $thumbUrl, ')
-          ..write('caption: $caption')
+          ..write('caption: $caption, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4642,6 +4718,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<int?> isScam;
   final Value<String?> codeUrl;
   final Value<String?> codeId;
+  final Value<int> rowid;
   const UsersCompanion({
     this.userId = const Value.absent(),
     this.identityNumber = const Value.absent(),
@@ -4658,6 +4735,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.isScam = const Value.absent(),
     this.codeUrl = const Value.absent(),
     this.codeId = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   UsersCompanion.insert({
     required String userId,
@@ -4675,6 +4753,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.isScam = const Value.absent(),
     this.codeUrl = const Value.absent(),
     this.codeId = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : userId = Value(userId),
         identityNumber = Value(identityNumber);
   static Insertable<User> custom({
@@ -4693,6 +4772,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<int>? isScam,
     Expression<String>? codeUrl,
     Expression<String>? codeId,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (userId != null) 'user_id': userId,
@@ -4710,6 +4790,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       if (isScam != null) 'is_scam': isScam,
       if (codeUrl != null) 'code_url': codeUrl,
       if (codeId != null) 'code_id': codeId,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -4728,7 +4809,8 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<String?>? biography,
       Value<int?>? isScam,
       Value<String?>? codeUrl,
-      Value<String?>? codeId}) {
+      Value<String?>? codeId,
+      Value<int>? rowid}) {
     return UsersCompanion(
       userId: userId ?? this.userId,
       identityNumber: identityNumber ?? this.identityNumber,
@@ -4745,6 +4827,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       isScam: isScam ?? this.isScam,
       codeUrl: codeUrl ?? this.codeUrl,
       codeId: codeId ?? this.codeId,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -4800,6 +4883,9 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (codeId.present) {
       map['code_id'] = Variable<String>(codeId.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -4820,7 +4906,8 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('biography: $biography, ')
           ..write('isScam: $isScam, ')
           ..write('codeUrl: $codeUrl, ')
-          ..write('codeId: $codeId')
+          ..write('codeId: $codeId, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4912,6 +4999,27 @@ class Snapshots extends Table with TableInfo<Snapshots, Snapshot> {
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: '');
+  static const VerificationMeta _snapshotHashMeta =
+      const VerificationMeta('snapshotHash');
+  late final GeneratedColumn<String> snapshotHash = GeneratedColumn<String>(
+      'snapshot_hash', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _openingBalanceMeta =
+      const VerificationMeta('openingBalance');
+  late final GeneratedColumn<String> openingBalance = GeneratedColumn<String>(
+      'opening_balance', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _closingBalanceMeta =
+      const VerificationMeta('closingBalance');
+  late final GeneratedColumn<String> closingBalance = GeneratedColumn<String>(
+      'closing_balance', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
   @override
   List<GeneratedColumn> get $columns => [
         snapshotId,
@@ -4925,7 +5033,10 @@ class Snapshots extends Table with TableInfo<Snapshots, Snapshot> {
         sender,
         receiver,
         memo,
-        confirmations
+        confirmations,
+        snapshotHash,
+        openingBalance,
+        closingBalance
       ];
   @override
   String get aliasedName => _alias ?? 'snapshots';
@@ -4997,6 +5108,24 @@ class Snapshots extends Table with TableInfo<Snapshots, Snapshot> {
           confirmations.isAcceptableOrUnknown(
               data['confirmations']!, _confirmationsMeta));
     }
+    if (data.containsKey('snapshot_hash')) {
+      context.handle(
+          _snapshotHashMeta,
+          snapshotHash.isAcceptableOrUnknown(
+              data['snapshot_hash']!, _snapshotHashMeta));
+    }
+    if (data.containsKey('opening_balance')) {
+      context.handle(
+          _openingBalanceMeta,
+          openingBalance.isAcceptableOrUnknown(
+              data['opening_balance']!, _openingBalanceMeta));
+    }
+    if (data.containsKey('closing_balance')) {
+      context.handle(
+          _closingBalanceMeta,
+          closingBalance.isAcceptableOrUnknown(
+              data['closing_balance']!, _closingBalanceMeta));
+    }
     return context;
   }
 
@@ -5031,6 +5160,12 @@ class Snapshots extends Table with TableInfo<Snapshots, Snapshot> {
           .read(DriftSqlType.string, data['${effectivePrefix}memo']),
       confirmations: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}confirmations']),
+      snapshotHash: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}snapshot_hash']),
+      openingBalance: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}opening_balance']),
+      closingBalance: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}closing_balance']),
     );
   }
 
@@ -5060,6 +5195,9 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
   final String? receiver;
   final String? memo;
   final int? confirmations;
+  final String? snapshotHash;
+  final String? openingBalance;
+  final String? closingBalance;
   const Snapshot(
       {required this.snapshotId,
       this.traceId,
@@ -5072,7 +5210,10 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
       this.sender,
       this.receiver,
       this.memo,
-      this.confirmations});
+      this.confirmations,
+      this.snapshotHash,
+      this.openingBalance,
+      this.closingBalance});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -5105,6 +5246,15 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
     if (!nullToAbsent || confirmations != null) {
       map['confirmations'] = Variable<int>(confirmations);
     }
+    if (!nullToAbsent || snapshotHash != null) {
+      map['snapshot_hash'] = Variable<String>(snapshotHash);
+    }
+    if (!nullToAbsent || openingBalance != null) {
+      map['opening_balance'] = Variable<String>(openingBalance);
+    }
+    if (!nullToAbsent || closingBalance != null) {
+      map['closing_balance'] = Variable<String>(closingBalance);
+    }
     return map;
   }
 
@@ -5133,6 +5283,15 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
       confirmations: confirmations == null && nullToAbsent
           ? const Value.absent()
           : Value(confirmations),
+      snapshotHash: snapshotHash == null && nullToAbsent
+          ? const Value.absent()
+          : Value(snapshotHash),
+      openingBalance: openingBalance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(openingBalance),
+      closingBalance: closingBalance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(closingBalance),
     );
   }
 
@@ -5152,6 +5311,9 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
       receiver: serializer.fromJson<String?>(json['receiver']),
       memo: serializer.fromJson<String?>(json['memo']),
       confirmations: serializer.fromJson<int?>(json['confirmations']),
+      snapshotHash: serializer.fromJson<String?>(json['snapshot_hash']),
+      openingBalance: serializer.fromJson<String?>(json['opening_balance']),
+      closingBalance: serializer.fromJson<String?>(json['closing_balance']),
     );
   }
   @override
@@ -5170,6 +5332,9 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
       'receiver': serializer.toJson<String?>(receiver),
       'memo': serializer.toJson<String?>(memo),
       'confirmations': serializer.toJson<int?>(confirmations),
+      'snapshot_hash': serializer.toJson<String?>(snapshotHash),
+      'opening_balance': serializer.toJson<String?>(openingBalance),
+      'closing_balance': serializer.toJson<String?>(closingBalance),
     };
   }
 
@@ -5185,7 +5350,10 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
           Value<String?> sender = const Value.absent(),
           Value<String?> receiver = const Value.absent(),
           Value<String?> memo = const Value.absent(),
-          Value<int?> confirmations = const Value.absent()}) =>
+          Value<int?> confirmations = const Value.absent(),
+          Value<String?> snapshotHash = const Value.absent(),
+          Value<String?> openingBalance = const Value.absent(),
+          Value<String?> closingBalance = const Value.absent()}) =>
       Snapshot(
         snapshotId: snapshotId ?? this.snapshotId,
         traceId: traceId.present ? traceId.value : this.traceId,
@@ -5202,6 +5370,12 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
         memo: memo.present ? memo.value : this.memo,
         confirmations:
             confirmations.present ? confirmations.value : this.confirmations,
+        snapshotHash:
+            snapshotHash.present ? snapshotHash.value : this.snapshotHash,
+        openingBalance:
+            openingBalance.present ? openingBalance.value : this.openingBalance,
+        closingBalance:
+            closingBalance.present ? closingBalance.value : this.closingBalance,
       );
   @override
   String toString() {
@@ -5217,7 +5391,10 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
           ..write('sender: $sender, ')
           ..write('receiver: $receiver, ')
           ..write('memo: $memo, ')
-          ..write('confirmations: $confirmations')
+          ..write('confirmations: $confirmations, ')
+          ..write('snapshotHash: $snapshotHash, ')
+          ..write('openingBalance: $openingBalance, ')
+          ..write('closingBalance: $closingBalance')
           ..write(')'))
         .toString();
   }
@@ -5235,7 +5412,10 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
       sender,
       receiver,
       memo,
-      confirmations);
+      confirmations,
+      snapshotHash,
+      openingBalance,
+      closingBalance);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5251,7 +5431,10 @@ class Snapshot extends DataClass implements Insertable<Snapshot> {
           other.sender == this.sender &&
           other.receiver == this.receiver &&
           other.memo == this.memo &&
-          other.confirmations == this.confirmations);
+          other.confirmations == this.confirmations &&
+          other.snapshotHash == this.snapshotHash &&
+          other.openingBalance == this.openingBalance &&
+          other.closingBalance == this.closingBalance);
 }
 
 class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
@@ -5267,6 +5450,10 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
   final Value<String?> receiver;
   final Value<String?> memo;
   final Value<int?> confirmations;
+  final Value<String?> snapshotHash;
+  final Value<String?> openingBalance;
+  final Value<String?> closingBalance;
+  final Value<int> rowid;
   const SnapshotsCompanion({
     this.snapshotId = const Value.absent(),
     this.traceId = const Value.absent(),
@@ -5280,6 +5467,10 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
     this.receiver = const Value.absent(),
     this.memo = const Value.absent(),
     this.confirmations = const Value.absent(),
+    this.snapshotHash = const Value.absent(),
+    this.openingBalance = const Value.absent(),
+    this.closingBalance = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   SnapshotsCompanion.insert({
     required String snapshotId,
@@ -5294,6 +5485,10 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
     this.receiver = const Value.absent(),
     this.memo = const Value.absent(),
     this.confirmations = const Value.absent(),
+    this.snapshotHash = const Value.absent(),
+    this.openingBalance = const Value.absent(),
+    this.closingBalance = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : snapshotId = Value(snapshotId),
         type = Value(type),
         assetId = Value(assetId),
@@ -5312,6 +5507,10 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
     Expression<String>? receiver,
     Expression<String>? memo,
     Expression<int>? confirmations,
+    Expression<String>? snapshotHash,
+    Expression<String>? openingBalance,
+    Expression<String>? closingBalance,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (snapshotId != null) 'snapshot_id': snapshotId,
@@ -5326,6 +5525,10 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
       if (receiver != null) 'receiver': receiver,
       if (memo != null) 'memo': memo,
       if (confirmations != null) 'confirmations': confirmations,
+      if (snapshotHash != null) 'snapshot_hash': snapshotHash,
+      if (openingBalance != null) 'opening_balance': openingBalance,
+      if (closingBalance != null) 'closing_balance': closingBalance,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -5341,7 +5544,11 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
       Value<String?>? sender,
       Value<String?>? receiver,
       Value<String?>? memo,
-      Value<int?>? confirmations}) {
+      Value<int?>? confirmations,
+      Value<String?>? snapshotHash,
+      Value<String?>? openingBalance,
+      Value<String?>? closingBalance,
+      Value<int>? rowid}) {
     return SnapshotsCompanion(
       snapshotId: snapshotId ?? this.snapshotId,
       traceId: traceId ?? this.traceId,
@@ -5355,6 +5562,10 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
       receiver: receiver ?? this.receiver,
       memo: memo ?? this.memo,
       confirmations: confirmations ?? this.confirmations,
+      snapshotHash: snapshotHash ?? this.snapshotHash,
+      openingBalance: openingBalance ?? this.openingBalance,
+      closingBalance: closingBalance ?? this.closingBalance,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -5398,6 +5609,18 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
     if (confirmations.present) {
       map['confirmations'] = Variable<int>(confirmations.value);
     }
+    if (snapshotHash.present) {
+      map['snapshot_hash'] = Variable<String>(snapshotHash.value);
+    }
+    if (openingBalance.present) {
+      map['opening_balance'] = Variable<String>(openingBalance.value);
+    }
+    if (closingBalance.present) {
+      map['closing_balance'] = Variable<String>(closingBalance.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -5415,7 +5638,11 @@ class SnapshotsCompanion extends UpdateCompanion<Snapshot> {
           ..write('sender: $sender, ')
           ..write('receiver: $receiver, ')
           ..write('memo: $memo, ')
-          ..write('confirmations: $confirmations')
+          ..write('confirmations: $confirmations, ')
+          ..write('snapshotHash: $snapshotHash, ')
+          ..write('openingBalance: $openingBalance, ')
+          ..write('closingBalance: $closingBalance, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -5931,6 +6158,7 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
   final Value<int> confirmations;
   final Value<String?> assetKey;
   final Value<String?> reserve;
+  final Value<int> rowid;
   const AssetsCompanion({
     this.assetId = const Value.absent(),
     this.symbol = const Value.absent(),
@@ -5947,6 +6175,7 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
     this.confirmations = const Value.absent(),
     this.assetKey = const Value.absent(),
     this.reserve = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   AssetsCompanion.insert({
     required String assetId,
@@ -5964,6 +6193,7 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
     required int confirmations,
     this.assetKey = const Value.absent(),
     this.reserve = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : assetId = Value(assetId),
         symbol = Value(symbol),
         name = Value(name),
@@ -5992,6 +6222,7 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
     Expression<int>? confirmations,
     Expression<String>? assetKey,
     Expression<String>? reserve,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (assetId != null) 'asset_id': assetId,
@@ -6009,6 +6240,7 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
       if (confirmations != null) 'confirmations': confirmations,
       if (assetKey != null) 'asset_key': assetKey,
       if (reserve != null) 'reserve': reserve,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -6027,7 +6259,8 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
       Value<String>? changeBtc,
       Value<int>? confirmations,
       Value<String?>? assetKey,
-      Value<String?>? reserve}) {
+      Value<String?>? reserve,
+      Value<int>? rowid}) {
     return AssetsCompanion(
       assetId: assetId ?? this.assetId,
       symbol: symbol ?? this.symbol,
@@ -6044,6 +6277,7 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
       confirmations: confirmations ?? this.confirmations,
       assetKey: assetKey ?? this.assetKey,
       reserve: reserve ?? this.reserve,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -6095,6 +6329,9 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
     if (reserve.present) {
       map['reserve'] = Variable<String>(reserve.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -6115,7 +6352,8 @@ class AssetsCompanion extends UpdateCompanion<Asset> {
           ..write('changeBtc: $changeBtc, ')
           ..write('confirmations: $confirmations, ')
           ..write('assetKey: $assetKey, ')
-          ..write('reserve: $reserve')
+          ..write('reserve: $reserve, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -6334,12 +6572,14 @@ class ChainsCompanion extends UpdateCompanion<Chain> {
   final Value<String> symbol;
   final Value<String> iconUrl;
   final Value<int> threshold;
+  final Value<int> rowid;
   const ChainsCompanion({
     this.chainId = const Value.absent(),
     this.name = const Value.absent(),
     this.symbol = const Value.absent(),
     this.iconUrl = const Value.absent(),
     this.threshold = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ChainsCompanion.insert({
     required String chainId,
@@ -6347,6 +6587,7 @@ class ChainsCompanion extends UpdateCompanion<Chain> {
     required String symbol,
     required String iconUrl,
     required int threshold,
+    this.rowid = const Value.absent(),
   })  : chainId = Value(chainId),
         name = Value(name),
         symbol = Value(symbol),
@@ -6358,6 +6599,7 @@ class ChainsCompanion extends UpdateCompanion<Chain> {
     Expression<String>? symbol,
     Expression<String>? iconUrl,
     Expression<int>? threshold,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (chainId != null) 'chain_id': chainId,
@@ -6365,6 +6607,7 @@ class ChainsCompanion extends UpdateCompanion<Chain> {
       if (symbol != null) 'symbol': symbol,
       if (iconUrl != null) 'icon_url': iconUrl,
       if (threshold != null) 'threshold': threshold,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -6373,13 +6616,15 @@ class ChainsCompanion extends UpdateCompanion<Chain> {
       Value<String>? name,
       Value<String>? symbol,
       Value<String>? iconUrl,
-      Value<int>? threshold}) {
+      Value<int>? threshold,
+      Value<int>? rowid}) {
     return ChainsCompanion(
       chainId: chainId ?? this.chainId,
       name: name ?? this.name,
       symbol: symbol ?? this.symbol,
       iconUrl: iconUrl ?? this.iconUrl,
       threshold: threshold ?? this.threshold,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -6401,6 +6646,9 @@ class ChainsCompanion extends UpdateCompanion<Chain> {
     if (threshold.present) {
       map['threshold'] = Variable<int>(threshold.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -6411,7 +6659,8 @@ class ChainsCompanion extends UpdateCompanion<Chain> {
           ..write('name: $name, ')
           ..write('symbol: $symbol, ')
           ..write('iconUrl: $iconUrl, ')
-          ..write('threshold: $threshold')
+          ..write('threshold: $threshold, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -6759,6 +7008,7 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
   final Value<int> assetHeight;
   final Value<DateTime> createdAt;
   final Value<DateTime?> lastUseAt;
+  final Value<int> rowid;
   const StickersCompanion({
     this.stickerId = const Value.absent(),
     this.albumId = const Value.absent(),
@@ -6769,6 +7019,7 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
     this.assetHeight = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.lastUseAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   StickersCompanion.insert({
     required String stickerId,
@@ -6780,6 +7031,7 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
     required int assetHeight,
     required DateTime createdAt,
     this.lastUseAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : stickerId = Value(stickerId),
         name = Value(name),
         assetUrl = Value(assetUrl),
@@ -6797,6 +7049,7 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
     Expression<int>? assetHeight,
     Expression<int>? createdAt,
     Expression<int>? lastUseAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (stickerId != null) 'sticker_id': stickerId,
@@ -6808,6 +7061,7 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
       if (assetHeight != null) 'asset_height': assetHeight,
       if (createdAt != null) 'created_at': createdAt,
       if (lastUseAt != null) 'last_use_at': lastUseAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -6820,7 +7074,8 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
       Value<int>? assetWidth,
       Value<int>? assetHeight,
       Value<DateTime>? createdAt,
-      Value<DateTime?>? lastUseAt}) {
+      Value<DateTime?>? lastUseAt,
+      Value<int>? rowid}) {
     return StickersCompanion(
       stickerId: stickerId ?? this.stickerId,
       albumId: albumId ?? this.albumId,
@@ -6831,6 +7086,7 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
       assetHeight: assetHeight ?? this.assetHeight,
       createdAt: createdAt ?? this.createdAt,
       lastUseAt: lastUseAt ?? this.lastUseAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -6866,6 +7122,9 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
       final converter = Stickers.$converterlastUseAtn;
       map['last_use_at'] = Variable<int>(converter.toSql(lastUseAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -6880,7 +7139,8 @@ class StickersCompanion extends UpdateCompanion<Sticker> {
           ..write('assetWidth: $assetWidth, ')
           ..write('assetHeight: $assetHeight, ')
           ..write('createdAt: $createdAt, ')
-          ..write('lastUseAt: $lastUseAt')
+          ..write('lastUseAt: $lastUseAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -7110,12 +7370,14 @@ class HyperlinksCompanion extends UpdateCompanion<Hyperlink> {
   final Value<String> siteTitle;
   final Value<String?> siteDescription;
   final Value<String?> siteImage;
+  final Value<int> rowid;
   const HyperlinksCompanion({
     this.hyperlink = const Value.absent(),
     this.siteName = const Value.absent(),
     this.siteTitle = const Value.absent(),
     this.siteDescription = const Value.absent(),
     this.siteImage = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   HyperlinksCompanion.insert({
     required String hyperlink,
@@ -7123,6 +7385,7 @@ class HyperlinksCompanion extends UpdateCompanion<Hyperlink> {
     required String siteTitle,
     this.siteDescription = const Value.absent(),
     this.siteImage = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : hyperlink = Value(hyperlink),
         siteName = Value(siteName),
         siteTitle = Value(siteTitle);
@@ -7132,6 +7395,7 @@ class HyperlinksCompanion extends UpdateCompanion<Hyperlink> {
     Expression<String>? siteTitle,
     Expression<String>? siteDescription,
     Expression<String>? siteImage,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (hyperlink != null) 'hyperlink': hyperlink,
@@ -7139,6 +7403,7 @@ class HyperlinksCompanion extends UpdateCompanion<Hyperlink> {
       if (siteTitle != null) 'site_title': siteTitle,
       if (siteDescription != null) 'site_description': siteDescription,
       if (siteImage != null) 'site_image': siteImage,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -7147,13 +7412,15 @@ class HyperlinksCompanion extends UpdateCompanion<Hyperlink> {
       Value<String>? siteName,
       Value<String>? siteTitle,
       Value<String?>? siteDescription,
-      Value<String?>? siteImage}) {
+      Value<String?>? siteImage,
+      Value<int>? rowid}) {
     return HyperlinksCompanion(
       hyperlink: hyperlink ?? this.hyperlink,
       siteName: siteName ?? this.siteName,
       siteTitle: siteTitle ?? this.siteTitle,
       siteDescription: siteDescription ?? this.siteDescription,
       siteImage: siteImage ?? this.siteImage,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -7175,6 +7442,9 @@ class HyperlinksCompanion extends UpdateCompanion<Hyperlink> {
     if (siteImage.present) {
       map['site_image'] = Variable<String>(siteImage.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -7185,7 +7455,8 @@ class HyperlinksCompanion extends UpdateCompanion<Hyperlink> {
           ..write('siteName: $siteName, ')
           ..write('siteTitle: $siteTitle, ')
           ..write('siteDescription: $siteDescription, ')
-          ..write('siteImage: $siteImage')
+          ..write('siteImage: $siteImage, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -7356,37 +7627,44 @@ class MessageMentionsCompanion extends UpdateCompanion<MessageMention> {
   final Value<String> messageId;
   final Value<String> conversationId;
   final Value<bool?> hasRead;
+  final Value<int> rowid;
   const MessageMentionsCompanion({
     this.messageId = const Value.absent(),
     this.conversationId = const Value.absent(),
     this.hasRead = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MessageMentionsCompanion.insert({
     required String messageId,
     required String conversationId,
     this.hasRead = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : messageId = Value(messageId),
         conversationId = Value(conversationId);
   static Insertable<MessageMention> custom({
     Expression<String>? messageId,
     Expression<String>? conversationId,
     Expression<bool>? hasRead,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (messageId != null) 'message_id': messageId,
       if (conversationId != null) 'conversation_id': conversationId,
       if (hasRead != null) 'has_read': hasRead,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   MessageMentionsCompanion copyWith(
       {Value<String>? messageId,
       Value<String>? conversationId,
-      Value<bool?>? hasRead}) {
+      Value<bool?>? hasRead,
+      Value<int>? rowid}) {
     return MessageMentionsCompanion(
       messageId: messageId ?? this.messageId,
       conversationId: conversationId ?? this.conversationId,
       hasRead: hasRead ?? this.hasRead,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -7402,6 +7680,9 @@ class MessageMentionsCompanion extends UpdateCompanion<MessageMention> {
     if (hasRead.present) {
       map['has_read'] = Variable<bool>(hasRead.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -7410,7 +7691,8 @@ class MessageMentionsCompanion extends UpdateCompanion<MessageMention> {
     return (StringBuffer('MessageMentionsCompanion(')
           ..write('messageId: $messageId, ')
           ..write('conversationId: $conversationId, ')
-          ..write('hasRead: $hasRead')
+          ..write('hasRead: $hasRead, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -7579,35 +7861,44 @@ class ExpiredMessagesCompanion extends UpdateCompanion<ExpiredMessage> {
   final Value<String> messageId;
   final Value<int> expireIn;
   final Value<int?> expireAt;
+  final Value<int> rowid;
   const ExpiredMessagesCompanion({
     this.messageId = const Value.absent(),
     this.expireIn = const Value.absent(),
     this.expireAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ExpiredMessagesCompanion.insert({
     required String messageId,
     required int expireIn,
     this.expireAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : messageId = Value(messageId),
         expireIn = Value(expireIn);
   static Insertable<ExpiredMessage> custom({
     Expression<String>? messageId,
     Expression<int>? expireIn,
     Expression<int>? expireAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (messageId != null) 'message_id': messageId,
       if (expireIn != null) 'expire_in': expireIn,
       if (expireAt != null) 'expire_at': expireAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   ExpiredMessagesCompanion copyWith(
-      {Value<String>? messageId, Value<int>? expireIn, Value<int?>? expireAt}) {
+      {Value<String>? messageId,
+      Value<int>? expireIn,
+      Value<int?>? expireAt,
+      Value<int>? rowid}) {
     return ExpiredMessagesCompanion(
       messageId: messageId ?? this.messageId,
       expireIn: expireIn ?? this.expireIn,
       expireAt: expireAt ?? this.expireAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -7623,6 +7914,9 @@ class ExpiredMessagesCompanion extends UpdateCompanion<ExpiredMessage> {
     if (expireAt.present) {
       map['expire_at'] = Variable<int>(expireAt.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -7631,7 +7925,8 @@ class ExpiredMessagesCompanion extends UpdateCompanion<ExpiredMessage> {
     return (StringBuffer('ExpiredMessagesCompanion(')
           ..write('messageId: $messageId, ')
           ..write('expireIn: $expireIn, ')
-          ..write('expireAt: $expireAt')
+          ..write('expireAt: $expireAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -7796,15 +8091,18 @@ class FloodMessagesCompanion extends UpdateCompanion<FloodMessage> {
   final Value<String> messageId;
   final Value<String> data;
   final Value<DateTime> createdAt;
+  final Value<int> rowid;
   const FloodMessagesCompanion({
     this.messageId = const Value.absent(),
     this.data = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   FloodMessagesCompanion.insert({
     required String messageId,
     required String data,
     required DateTime createdAt,
+    this.rowid = const Value.absent(),
   })  : messageId = Value(messageId),
         data = Value(data),
         createdAt = Value(createdAt);
@@ -7812,22 +8110,26 @@ class FloodMessagesCompanion extends UpdateCompanion<FloodMessage> {
     Expression<String>? messageId,
     Expression<String>? data,
     Expression<int>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (messageId != null) 'message_id': messageId,
       if (data != null) 'data': data,
       if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   FloodMessagesCompanion copyWith(
       {Value<String>? messageId,
       Value<String>? data,
-      Value<DateTime>? createdAt}) {
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
     return FloodMessagesCompanion(
       messageId: messageId ?? this.messageId,
       data: data ?? this.data,
       createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -7844,6 +8146,9 @@ class FloodMessagesCompanion extends UpdateCompanion<FloodMessage> {
       final converter = FloodMessages.$convertercreatedAt;
       map['created_at'] = Variable<int>(converter.toSql(createdAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -7852,7 +8157,8 @@ class FloodMessagesCompanion extends UpdateCompanion<FloodMessage> {
     return (StringBuffer('FloodMessagesCompanion(')
           ..write('messageId: $messageId, ')
           ..write('data: $data, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -8053,17 +8359,20 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
   final Value<String> name;
   final Value<DateTime> createdAt;
   final Value<DateTime?> orderedAt;
+  final Value<int> rowid;
   const CirclesCompanion({
     this.circleId = const Value.absent(),
     this.name = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.orderedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   CirclesCompanion.insert({
     required String circleId,
     required String name,
     required DateTime createdAt,
     this.orderedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : circleId = Value(circleId),
         name = Value(name),
         createdAt = Value(createdAt);
@@ -8072,12 +8381,14 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
     Expression<String>? name,
     Expression<int>? createdAt,
     Expression<int>? orderedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (circleId != null) 'circle_id': circleId,
       if (name != null) 'name': name,
       if (createdAt != null) 'created_at': createdAt,
       if (orderedAt != null) 'ordered_at': orderedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -8085,12 +8396,14 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
       {Value<String>? circleId,
       Value<String>? name,
       Value<DateTime>? createdAt,
-      Value<DateTime?>? orderedAt}) {
+      Value<DateTime?>? orderedAt,
+      Value<int>? rowid}) {
     return CirclesCompanion(
       circleId: circleId ?? this.circleId,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       orderedAt: orderedAt ?? this.orderedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -8111,6 +8424,9 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
       final converter = Circles.$converterorderedAtn;
       map['ordered_at'] = Variable<int>(converter.toSql(orderedAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -8120,7 +8436,8 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
           ..write('circleId: $circleId, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
-          ..write('orderedAt: $orderedAt')
+          ..write('orderedAt: $orderedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -8355,12 +8672,14 @@ class CircleConversationsCompanion extends UpdateCompanion<CircleConversation> {
   final Value<String?> userId;
   final Value<DateTime> createdAt;
   final Value<DateTime?> pinTime;
+  final Value<int> rowid;
   const CircleConversationsCompanion({
     this.conversationId = const Value.absent(),
     this.circleId = const Value.absent(),
     this.userId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.pinTime = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   CircleConversationsCompanion.insert({
     required String conversationId,
@@ -8368,6 +8687,7 @@ class CircleConversationsCompanion extends UpdateCompanion<CircleConversation> {
     this.userId = const Value.absent(),
     required DateTime createdAt,
     this.pinTime = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : conversationId = Value(conversationId),
         circleId = Value(circleId),
         createdAt = Value(createdAt);
@@ -8377,6 +8697,7 @@ class CircleConversationsCompanion extends UpdateCompanion<CircleConversation> {
     Expression<String>? userId,
     Expression<int>? createdAt,
     Expression<int>? pinTime,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (conversationId != null) 'conversation_id': conversationId,
@@ -8384,6 +8705,7 @@ class CircleConversationsCompanion extends UpdateCompanion<CircleConversation> {
       if (userId != null) 'user_id': userId,
       if (createdAt != null) 'created_at': createdAt,
       if (pinTime != null) 'pin_time': pinTime,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -8392,13 +8714,15 @@ class CircleConversationsCompanion extends UpdateCompanion<CircleConversation> {
       Value<String>? circleId,
       Value<String?>? userId,
       Value<DateTime>? createdAt,
-      Value<DateTime?>? pinTime}) {
+      Value<DateTime?>? pinTime,
+      Value<int>? rowid}) {
     return CircleConversationsCompanion(
       conversationId: conversationId ?? this.conversationId,
       circleId: circleId ?? this.circleId,
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       pinTime: pinTime ?? this.pinTime,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -8422,6 +8746,9 @@ class CircleConversationsCompanion extends UpdateCompanion<CircleConversation> {
       final converter = CircleConversations.$converterpinTimen;
       map['pin_time'] = Variable<int>(converter.toSql(pinTime.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -8432,7 +8759,8 @@ class CircleConversationsCompanion extends UpdateCompanion<CircleConversation> {
           ..write('circleId: $circleId, ')
           ..write('userId: $userId, ')
           ..write('createdAt: $createdAt, ')
-          ..write('pinTime: $pinTime')
+          ..write('pinTime: $pinTime, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -8633,17 +8961,20 @@ class ParticipantsCompanion extends UpdateCompanion<Participant> {
   final Value<String> userId;
   final Value<ParticipantRole?> role;
   final Value<DateTime> createdAt;
+  final Value<int> rowid;
   const ParticipantsCompanion({
     this.conversationId = const Value.absent(),
     this.userId = const Value.absent(),
     this.role = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ParticipantsCompanion.insert({
     required String conversationId,
     required String userId,
     this.role = const Value.absent(),
     required DateTime createdAt,
+    this.rowid = const Value.absent(),
   })  : conversationId = Value(conversationId),
         userId = Value(userId),
         createdAt = Value(createdAt);
@@ -8652,12 +8983,14 @@ class ParticipantsCompanion extends UpdateCompanion<Participant> {
     Expression<String>? userId,
     Expression<String>? role,
     Expression<int>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (conversationId != null) 'conversation_id': conversationId,
       if (userId != null) 'user_id': userId,
       if (role != null) 'role': role,
       if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -8665,12 +8998,14 @@ class ParticipantsCompanion extends UpdateCompanion<Participant> {
       {Value<String>? conversationId,
       Value<String>? userId,
       Value<ParticipantRole?>? role,
-      Value<DateTime>? createdAt}) {
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
     return ParticipantsCompanion(
       conversationId: conversationId ?? this.conversationId,
       userId: userId ?? this.userId,
       role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -8691,6 +9026,9 @@ class ParticipantsCompanion extends UpdateCompanion<Participant> {
       final converter = Participants.$convertercreatedAt;
       map['created_at'] = Variable<int>(converter.toSql(createdAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -8700,7 +9038,8 @@ class ParticipantsCompanion extends UpdateCompanion<Participant> {
           ..write('conversationId: $conversationId, ')
           ..write('userId: $userId, ')
           ..write('role: $role, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -8967,6 +9306,7 @@ class ParticipantSessionCompanion
   final Value<int?> sentToServer;
   final Value<DateTime?> createdAt;
   final Value<String?> publicKey;
+  final Value<int> rowid;
   const ParticipantSessionCompanion({
     this.conversationId = const Value.absent(),
     this.userId = const Value.absent(),
@@ -8974,6 +9314,7 @@ class ParticipantSessionCompanion
     this.sentToServer = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.publicKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ParticipantSessionCompanion.insert({
     required String conversationId,
@@ -8982,6 +9323,7 @@ class ParticipantSessionCompanion
     this.sentToServer = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.publicKey = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : conversationId = Value(conversationId),
         userId = Value(userId),
         sessionId = Value(sessionId);
@@ -8992,6 +9334,7 @@ class ParticipantSessionCompanion
     Expression<int>? sentToServer,
     Expression<int>? createdAt,
     Expression<String>? publicKey,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (conversationId != null) 'conversation_id': conversationId,
@@ -9000,6 +9343,7 @@ class ParticipantSessionCompanion
       if (sentToServer != null) 'sent_to_server': sentToServer,
       if (createdAt != null) 'created_at': createdAt,
       if (publicKey != null) 'public_key': publicKey,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -9009,7 +9353,8 @@ class ParticipantSessionCompanion
       Value<String>? sessionId,
       Value<int?>? sentToServer,
       Value<DateTime?>? createdAt,
-      Value<String?>? publicKey}) {
+      Value<String?>? publicKey,
+      Value<int>? rowid}) {
     return ParticipantSessionCompanion(
       conversationId: conversationId ?? this.conversationId,
       userId: userId ?? this.userId,
@@ -9017,6 +9362,7 @@ class ParticipantSessionCompanion
       sentToServer: sentToServer ?? this.sentToServer,
       createdAt: createdAt ?? this.createdAt,
       publicKey: publicKey ?? this.publicKey,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -9042,6 +9388,9 @@ class ParticipantSessionCompanion
     if (publicKey.present) {
       map['public_key'] = Variable<String>(publicKey.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -9053,7 +9402,8 @@ class ParticipantSessionCompanion
           ..write('sessionId: $sessionId, ')
           ..write('sentToServer: $sentToServer, ')
           ..write('createdAt: $createdAt, ')
-          ..write('publicKey: $publicKey')
+          ..write('publicKey: $publicKey, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -9280,12 +9630,14 @@ class ResendSessionMessagesCompanion
   final Value<String> sessionId;
   final Value<int> status;
   final Value<DateTime> createdAt;
+  final Value<int> rowid;
   const ResendSessionMessagesCompanion({
     this.messageId = const Value.absent(),
     this.userId = const Value.absent(),
     this.sessionId = const Value.absent(),
     this.status = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ResendSessionMessagesCompanion.insert({
     required String messageId,
@@ -9293,6 +9645,7 @@ class ResendSessionMessagesCompanion
     required String sessionId,
     required int status,
     required DateTime createdAt,
+    this.rowid = const Value.absent(),
   })  : messageId = Value(messageId),
         userId = Value(userId),
         sessionId = Value(sessionId),
@@ -9304,6 +9657,7 @@ class ResendSessionMessagesCompanion
     Expression<String>? sessionId,
     Expression<int>? status,
     Expression<int>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (messageId != null) 'message_id': messageId,
@@ -9311,6 +9665,7 @@ class ResendSessionMessagesCompanion
       if (sessionId != null) 'session_id': sessionId,
       if (status != null) 'status': status,
       if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -9319,13 +9674,15 @@ class ResendSessionMessagesCompanion
       Value<String>? userId,
       Value<String>? sessionId,
       Value<int>? status,
-      Value<DateTime>? createdAt}) {
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
     return ResendSessionMessagesCompanion(
       messageId: messageId ?? this.messageId,
       userId: userId ?? this.userId,
       sessionId: sessionId ?? this.sessionId,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -9348,6 +9705,9 @@ class ResendSessionMessagesCompanion
       final converter = ResendSessionMessages.$convertercreatedAt;
       map['created_at'] = Variable<int>(converter.toSql(createdAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -9358,396 +9718,8 @@ class ResendSessionMessagesCompanion
           ..write('userId: $userId, ')
           ..write('sessionId: $sessionId, ')
           ..write('status: $status, ')
-          ..write('createdAt: $createdAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class MessagesFts extends Table
-    with
-        TableInfo<MessagesFts, MessagesFt>,
-        VirtualTableInfo<MessagesFts, MessagesFt> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  MessagesFts(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _messageIdMeta =
-      const VerificationMeta('messageId');
-  late final GeneratedColumn<String> messageId = GeneratedColumn<String>(
-      'message_id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: '');
-  static const VerificationMeta _conversationIdMeta =
-      const VerificationMeta('conversationId');
-  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
-      'conversation_id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: '');
-  static const VerificationMeta _contentMeta =
-      const VerificationMeta('content');
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-      'content', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: '');
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
-  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: '');
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-      'user_id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: '');
-  static const VerificationMeta _reservedIntMeta =
-      const VerificationMeta('reservedInt');
-  late final GeneratedColumn<String> reservedInt = GeneratedColumn<String>(
-      'reserved_int', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: '');
-  static const VerificationMeta _reservedTextMeta =
-      const VerificationMeta('reservedText');
-  late final GeneratedColumn<String> reservedText = GeneratedColumn<String>(
-      'reserved_text', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: '');
-  @override
-  List<GeneratedColumn> get $columns => [
-        messageId,
-        conversationId,
-        content,
-        createdAt,
-        userId,
-        reservedInt,
-        reservedText
-      ];
-  @override
-  String get aliasedName => _alias ?? 'messages_fts';
-  @override
-  String get actualTableName => 'messages_fts';
-  @override
-  VerificationContext validateIntegrity(Insertable<MessagesFt> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('message_id')) {
-      context.handle(_messageIdMeta,
-          messageId.isAcceptableOrUnknown(data['message_id']!, _messageIdMeta));
-    } else if (isInserting) {
-      context.missing(_messageIdMeta);
-    }
-    if (data.containsKey('conversation_id')) {
-      context.handle(
-          _conversationIdMeta,
-          conversationId.isAcceptableOrUnknown(
-              data['conversation_id']!, _conversationIdMeta));
-    } else if (isInserting) {
-      context.missing(_conversationIdMeta);
-    }
-    if (data.containsKey('content')) {
-      context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
-    } else if (isInserting) {
-      context.missing(_userIdMeta);
-    }
-    if (data.containsKey('reserved_int')) {
-      context.handle(
-          _reservedIntMeta,
-          reservedInt.isAcceptableOrUnknown(
-              data['reserved_int']!, _reservedIntMeta));
-    } else if (isInserting) {
-      context.missing(_reservedIntMeta);
-    }
-    if (data.containsKey('reserved_text')) {
-      context.handle(
-          _reservedTextMeta,
-          reservedText.isAcceptableOrUnknown(
-              data['reserved_text']!, _reservedTextMeta));
-    } else if (isInserting) {
-      context.missing(_reservedTextMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => const {};
-  @override
-  MessagesFt map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MessagesFt(
-      messageId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}message_id'])!,
-      conversationId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}conversation_id'])!,
-      content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}created_at'])!,
-      userId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
-      reservedInt: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}reserved_int'])!,
-      reservedText: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}reserved_text'])!,
-    );
-  }
-
-  @override
-  MessagesFts createAlias(String alias) {
-    return MessagesFts(attachedDatabase, alias);
-  }
-
-  @override
-  bool get dontWriteConstraints => true;
-  @override
-  String get moduleAndArgs =>
-      'FTS5(message_id UNINDEXED, conversation_id UNINDEXED, content, created_at UNINDEXED, user_id UNINDEXED, reserved_int UNINDEXED, reserved_text UNINDEXED, tokenize=\'unicode61\')';
-}
-
-class MessagesFt extends DataClass implements Insertable<MessagesFt> {
-  final String messageId;
-  final String conversationId;
-  final String content;
-  final String createdAt;
-  final String userId;
-  final String reservedInt;
-  final String reservedText;
-  const MessagesFt(
-      {required this.messageId,
-      required this.conversationId,
-      required this.content,
-      required this.createdAt,
-      required this.userId,
-      required this.reservedInt,
-      required this.reservedText});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['message_id'] = Variable<String>(messageId);
-    map['conversation_id'] = Variable<String>(conversationId);
-    map['content'] = Variable<String>(content);
-    map['created_at'] = Variable<String>(createdAt);
-    map['user_id'] = Variable<String>(userId);
-    map['reserved_int'] = Variable<String>(reservedInt);
-    map['reserved_text'] = Variable<String>(reservedText);
-    return map;
-  }
-
-  MessagesFtsCompanion toCompanion(bool nullToAbsent) {
-    return MessagesFtsCompanion(
-      messageId: Value(messageId),
-      conversationId: Value(conversationId),
-      content: Value(content),
-      createdAt: Value(createdAt),
-      userId: Value(userId),
-      reservedInt: Value(reservedInt),
-      reservedText: Value(reservedText),
-    );
-  }
-
-  factory MessagesFt.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MessagesFt(
-      messageId: serializer.fromJson<String>(json['message_id']),
-      conversationId: serializer.fromJson<String>(json['conversation_id']),
-      content: serializer.fromJson<String>(json['content']),
-      createdAt: serializer.fromJson<String>(json['created_at']),
-      userId: serializer.fromJson<String>(json['user_id']),
-      reservedInt: serializer.fromJson<String>(json['reserved_int']),
-      reservedText: serializer.fromJson<String>(json['reserved_text']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'message_id': serializer.toJson<String>(messageId),
-      'conversation_id': serializer.toJson<String>(conversationId),
-      'content': serializer.toJson<String>(content),
-      'created_at': serializer.toJson<String>(createdAt),
-      'user_id': serializer.toJson<String>(userId),
-      'reserved_int': serializer.toJson<String>(reservedInt),
-      'reserved_text': serializer.toJson<String>(reservedText),
-    };
-  }
-
-  MessagesFt copyWith(
-          {String? messageId,
-          String? conversationId,
-          String? content,
-          String? createdAt,
-          String? userId,
-          String? reservedInt,
-          String? reservedText}) =>
-      MessagesFt(
-        messageId: messageId ?? this.messageId,
-        conversationId: conversationId ?? this.conversationId,
-        content: content ?? this.content,
-        createdAt: createdAt ?? this.createdAt,
-        userId: userId ?? this.userId,
-        reservedInt: reservedInt ?? this.reservedInt,
-        reservedText: reservedText ?? this.reservedText,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('MessagesFt(')
-          ..write('messageId: $messageId, ')
-          ..write('conversationId: $conversationId, ')
-          ..write('content: $content, ')
           ..write('createdAt: $createdAt, ')
-          ..write('userId: $userId, ')
-          ..write('reservedInt: $reservedInt, ')
-          ..write('reservedText: $reservedText')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(messageId, conversationId, content, createdAt,
-      userId, reservedInt, reservedText);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MessagesFt &&
-          other.messageId == this.messageId &&
-          other.conversationId == this.conversationId &&
-          other.content == this.content &&
-          other.createdAt == this.createdAt &&
-          other.userId == this.userId &&
-          other.reservedInt == this.reservedInt &&
-          other.reservedText == this.reservedText);
-}
-
-class MessagesFtsCompanion extends UpdateCompanion<MessagesFt> {
-  final Value<String> messageId;
-  final Value<String> conversationId;
-  final Value<String> content;
-  final Value<String> createdAt;
-  final Value<String> userId;
-  final Value<String> reservedInt;
-  final Value<String> reservedText;
-  const MessagesFtsCompanion({
-    this.messageId = const Value.absent(),
-    this.conversationId = const Value.absent(),
-    this.content = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.reservedInt = const Value.absent(),
-    this.reservedText = const Value.absent(),
-  });
-  MessagesFtsCompanion.insert({
-    required String messageId,
-    required String conversationId,
-    required String content,
-    required String createdAt,
-    required String userId,
-    required String reservedInt,
-    required String reservedText,
-  })  : messageId = Value(messageId),
-        conversationId = Value(conversationId),
-        content = Value(content),
-        createdAt = Value(createdAt),
-        userId = Value(userId),
-        reservedInt = Value(reservedInt),
-        reservedText = Value(reservedText);
-  static Insertable<MessagesFt> custom({
-    Expression<String>? messageId,
-    Expression<String>? conversationId,
-    Expression<String>? content,
-    Expression<String>? createdAt,
-    Expression<String>? userId,
-    Expression<String>? reservedInt,
-    Expression<String>? reservedText,
-  }) {
-    return RawValuesInsertable({
-      if (messageId != null) 'message_id': messageId,
-      if (conversationId != null) 'conversation_id': conversationId,
-      if (content != null) 'content': content,
-      if (createdAt != null) 'created_at': createdAt,
-      if (userId != null) 'user_id': userId,
-      if (reservedInt != null) 'reserved_int': reservedInt,
-      if (reservedText != null) 'reserved_text': reservedText,
-    });
-  }
-
-  MessagesFtsCompanion copyWith(
-      {Value<String>? messageId,
-      Value<String>? conversationId,
-      Value<String>? content,
-      Value<String>? createdAt,
-      Value<String>? userId,
-      Value<String>? reservedInt,
-      Value<String>? reservedText}) {
-    return MessagesFtsCompanion(
-      messageId: messageId ?? this.messageId,
-      conversationId: conversationId ?? this.conversationId,
-      content: content ?? this.content,
-      createdAt: createdAt ?? this.createdAt,
-      userId: userId ?? this.userId,
-      reservedInt: reservedInt ?? this.reservedInt,
-      reservedText: reservedText ?? this.reservedText,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (messageId.present) {
-      map['message_id'] = Variable<String>(messageId.value);
-    }
-    if (conversationId.present) {
-      map['conversation_id'] = Variable<String>(conversationId.value);
-    }
-    if (content.present) {
-      map['content'] = Variable<String>(content.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<String>(createdAt.value);
-    }
-    if (userId.present) {
-      map['user_id'] = Variable<String>(userId.value);
-    }
-    if (reservedInt.present) {
-      map['reserved_int'] = Variable<String>(reservedInt.value);
-    }
-    if (reservedText.present) {
-      map['reserved_text'] = Variable<String>(reservedText.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MessagesFtsCompanion(')
-          ..write('messageId: $messageId, ')
-          ..write('conversationId: $conversationId, ')
-          ..write('content: $content, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('userId: $userId, ')
-          ..write('reservedInt: $reservedInt, ')
-          ..write('reservedText: $reservedText')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -10108,6 +10080,7 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
   final Value<String> fee;
   final Value<String?> tag;
   final Value<String?> dust;
+  final Value<int> rowid;
   const AddressesCompanion({
     this.addressId = const Value.absent(),
     this.type = const Value.absent(),
@@ -10119,6 +10092,7 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
     this.fee = const Value.absent(),
     this.tag = const Value.absent(),
     this.dust = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   AddressesCompanion.insert({
     required String addressId,
@@ -10131,6 +10105,7 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
     required String fee,
     this.tag = const Value.absent(),
     this.dust = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : addressId = Value(addressId),
         type = Value(type),
         assetId = Value(assetId),
@@ -10150,6 +10125,7 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
     Expression<String>? fee,
     Expression<String>? tag,
     Expression<String>? dust,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (addressId != null) 'address_id': addressId,
@@ -10162,6 +10138,7 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
       if (fee != null) 'fee': fee,
       if (tag != null) 'tag': tag,
       if (dust != null) 'dust': dust,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -10175,7 +10152,8 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
       Value<String>? reserve,
       Value<String>? fee,
       Value<String?>? tag,
-      Value<String?>? dust}) {
+      Value<String?>? dust,
+      Value<int>? rowid}) {
     return AddressesCompanion(
       addressId: addressId ?? this.addressId,
       type: type ?? this.type,
@@ -10187,6 +10165,7 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
       fee: fee ?? this.fee,
       tag: tag ?? this.tag,
       dust: dust ?? this.dust,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -10224,6 +10203,9 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
     if (dust.present) {
       map['dust'] = Variable<String>(dust.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -10239,7 +10221,8 @@ class AddressesCompanion extends UpdateCompanion<Addresse> {
           ..write('reserve: $reserve, ')
           ..write('fee: $fee, ')
           ..write('tag: $tag, ')
-          ..write('dust: $dust')
+          ..write('dust: $dust, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -10618,6 +10601,7 @@ class JobsCompanion extends UpdateCompanion<Job> {
   final Value<String?> conversationId;
   final Value<String?> resendMessageId;
   final Value<int> runCount;
+  final Value<int> rowid;
   const JobsCompanion({
     this.jobId = const Value.absent(),
     this.action = const Value.absent(),
@@ -10629,6 +10613,7 @@ class JobsCompanion extends UpdateCompanion<Job> {
     this.conversationId = const Value.absent(),
     this.resendMessageId = const Value.absent(),
     this.runCount = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   JobsCompanion.insert({
     required String jobId,
@@ -10641,6 +10626,7 @@ class JobsCompanion extends UpdateCompanion<Job> {
     this.conversationId = const Value.absent(),
     this.resendMessageId = const Value.absent(),
     required int runCount,
+    this.rowid = const Value.absent(),
   })  : jobId = Value(jobId),
         action = Value(action),
         createdAt = Value(createdAt),
@@ -10657,6 +10643,7 @@ class JobsCompanion extends UpdateCompanion<Job> {
     Expression<String>? conversationId,
     Expression<String>? resendMessageId,
     Expression<int>? runCount,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (jobId != null) 'job_id': jobId,
@@ -10669,6 +10656,7 @@ class JobsCompanion extends UpdateCompanion<Job> {
       if (conversationId != null) 'conversation_id': conversationId,
       if (resendMessageId != null) 'resend_message_id': resendMessageId,
       if (runCount != null) 'run_count': runCount,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -10682,7 +10670,8 @@ class JobsCompanion extends UpdateCompanion<Job> {
       Value<String?>? blazeMessage,
       Value<String?>? conversationId,
       Value<String?>? resendMessageId,
-      Value<int>? runCount}) {
+      Value<int>? runCount,
+      Value<int>? rowid}) {
     return JobsCompanion(
       jobId: jobId ?? this.jobId,
       action: action ?? this.action,
@@ -10694,6 +10683,7 @@ class JobsCompanion extends UpdateCompanion<Job> {
       conversationId: conversationId ?? this.conversationId,
       resendMessageId: resendMessageId ?? this.resendMessageId,
       runCount: runCount ?? this.runCount,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -10731,6 +10721,9 @@ class JobsCompanion extends UpdateCompanion<Job> {
     if (runCount.present) {
       map['run_count'] = Variable<int>(runCount.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -10746,7 +10739,8 @@ class JobsCompanion extends UpdateCompanion<Job> {
           ..write('blazeMessage: $blazeMessage, ')
           ..write('conversationId: $conversationId, ')
           ..write('resendMessageId: $resendMessageId, ')
-          ..write('runCount: $runCount')
+          ..write('runCount: $runCount, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -10861,23 +10855,30 @@ class MessagesHistoryData extends DataClass
 
 class MessagesHistoryCompanion extends UpdateCompanion<MessagesHistoryData> {
   final Value<String> messageId;
+  final Value<int> rowid;
   const MessagesHistoryCompanion({
     this.messageId = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MessagesHistoryCompanion.insert({
     required String messageId,
+    this.rowid = const Value.absent(),
   }) : messageId = Value(messageId);
   static Insertable<MessagesHistoryData> custom({
     Expression<String>? messageId,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (messageId != null) 'message_id': messageId,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  MessagesHistoryCompanion copyWith({Value<String>? messageId}) {
+  MessagesHistoryCompanion copyWith(
+      {Value<String>? messageId, Value<int>? rowid}) {
     return MessagesHistoryCompanion(
       messageId: messageId ?? this.messageId,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -10887,13 +10888,17 @@ class MessagesHistoryCompanion extends UpdateCompanion<MessagesHistoryData> {
     if (messageId.present) {
       map['message_id'] = Variable<String>(messageId.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('MessagesHistoryCompanion(')
-          ..write('messageId: $messageId')
+          ..write('messageId: $messageId, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -11029,29 +11034,36 @@ class Offset extends DataClass implements Insertable<Offset> {
 class OffsetsCompanion extends UpdateCompanion<Offset> {
   final Value<String> key;
   final Value<String> timestamp;
+  final Value<int> rowid;
   const OffsetsCompanion({
     this.key = const Value.absent(),
     this.timestamp = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   OffsetsCompanion.insert({
     required String key,
     required String timestamp,
+    this.rowid = const Value.absent(),
   })  : key = Value(key),
         timestamp = Value(timestamp);
   static Insertable<Offset> custom({
     Expression<String>? key,
     Expression<String>? timestamp,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (key != null) 'key': key,
       if (timestamp != null) 'timestamp': timestamp,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  OffsetsCompanion copyWith({Value<String>? key, Value<String>? timestamp}) {
+  OffsetsCompanion copyWith(
+      {Value<String>? key, Value<String>? timestamp, Value<int>? rowid}) {
     return OffsetsCompanion(
       key: key ?? this.key,
       timestamp: timestamp ?? this.timestamp,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -11064,6 +11076,9 @@ class OffsetsCompanion extends UpdateCompanion<Offset> {
     if (timestamp.present) {
       map['timestamp'] = Variable<String>(timestamp.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -11071,7 +11086,8 @@ class OffsetsCompanion extends UpdateCompanion<Offset> {
   String toString() {
     return (StringBuffer('OffsetsCompanion(')
           ..write('key: $key, ')
-          ..write('timestamp: $timestamp')
+          ..write('timestamp: $timestamp, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -11337,6 +11353,7 @@ class SentSessionSenderKeysCompanion
   final Value<int> sentToServer;
   final Value<int?> senderKeyId;
   final Value<DateTime?> createdAt;
+  final Value<int> rowid;
   const SentSessionSenderKeysCompanion({
     this.conversationId = const Value.absent(),
     this.userId = const Value.absent(),
@@ -11344,6 +11361,7 @@ class SentSessionSenderKeysCompanion
     this.sentToServer = const Value.absent(),
     this.senderKeyId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   SentSessionSenderKeysCompanion.insert({
     required String conversationId,
@@ -11352,6 +11370,7 @@ class SentSessionSenderKeysCompanion
     required int sentToServer,
     this.senderKeyId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : conversationId = Value(conversationId),
         userId = Value(userId),
         sessionId = Value(sessionId),
@@ -11363,6 +11382,7 @@ class SentSessionSenderKeysCompanion
     Expression<int>? sentToServer,
     Expression<int>? senderKeyId,
     Expression<int>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (conversationId != null) 'conversation_id': conversationId,
@@ -11371,6 +11391,7 @@ class SentSessionSenderKeysCompanion
       if (sentToServer != null) 'sent_to_server': sentToServer,
       if (senderKeyId != null) 'sender_key_id': senderKeyId,
       if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -11380,7 +11401,8 @@ class SentSessionSenderKeysCompanion
       Value<String>? sessionId,
       Value<int>? sentToServer,
       Value<int?>? senderKeyId,
-      Value<DateTime?>? createdAt}) {
+      Value<DateTime?>? createdAt,
+      Value<int>? rowid}) {
     return SentSessionSenderKeysCompanion(
       conversationId: conversationId ?? this.conversationId,
       userId: userId ?? this.userId,
@@ -11388,6 +11410,7 @@ class SentSessionSenderKeysCompanion
       sentToServer: sentToServer ?? this.sentToServer,
       senderKeyId: senderKeyId ?? this.senderKeyId,
       createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -11413,6 +11436,9 @@ class SentSessionSenderKeysCompanion
       final converter = SentSessionSenderKeys.$convertercreatedAtn;
       map['created_at'] = Variable<int>(converter.toSql(createdAt.value));
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -11424,7 +11450,8 @@ class SentSessionSenderKeysCompanion
           ..write('sessionId: $sessionId, ')
           ..write('sentToServer: $sentToServer, ')
           ..write('senderKeyId: $senderKeyId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -12358,6 +12385,7 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
   final Value<String?> quoteId;
   final Value<String?> quoteContent;
   final Value<String?> caption;
+  final Value<int> rowid;
   const TranscriptMessagesCompanion({
     this.transcriptId = const Value.absent(),
     this.messageId = const Value.absent(),
@@ -12386,6 +12414,7 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
     this.quoteId = const Value.absent(),
     this.quoteContent = const Value.absent(),
     this.caption = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   TranscriptMessagesCompanion.insert({
     required String transcriptId,
@@ -12415,6 +12444,7 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
     this.quoteId = const Value.absent(),
     this.quoteContent = const Value.absent(),
     this.caption = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : transcriptId = Value(transcriptId),
         messageId = Value(messageId),
         category = Value(category),
@@ -12447,6 +12477,7 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
     Expression<String>? quoteId,
     Expression<String>? quoteContent,
     Expression<String>? caption,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (transcriptId != null) 'transcript_id': transcriptId,
@@ -12476,6 +12507,7 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
       if (quoteId != null) 'quote_id': quoteId,
       if (quoteContent != null) 'quote_content': quoteContent,
       if (caption != null) 'caption': caption,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -12506,7 +12538,8 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
       Value<String?>? mentions,
       Value<String?>? quoteId,
       Value<String?>? quoteContent,
-      Value<String?>? caption}) {
+      Value<String?>? caption,
+      Value<int>? rowid}) {
     return TranscriptMessagesCompanion(
       transcriptId: transcriptId ?? this.transcriptId,
       messageId: messageId ?? this.messageId,
@@ -12535,6 +12568,7 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
       quoteId: quoteId ?? this.quoteId,
       quoteContent: quoteContent ?? this.quoteContent,
       caption: caption ?? this.caption,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -12627,6 +12661,9 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
     if (caption.present) {
       map['caption'] = Variable<String>(caption.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -12659,7 +12696,8 @@ class TranscriptMessagesCompanion extends UpdateCompanion<TranscriptMessage> {
           ..write('mentions: $mentions, ')
           ..write('quoteId: $quoteId, ')
           ..write('quoteContent: $quoteContent, ')
-          ..write('caption: $caption')
+          ..write('caption: $caption, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -12792,29 +12830,36 @@ class Fiat extends DataClass implements Insertable<Fiat> {
 class FiatsCompanion extends UpdateCompanion<Fiat> {
   final Value<String> code;
   final Value<double> rate;
+  final Value<int> rowid;
   const FiatsCompanion({
     this.code = const Value.absent(),
     this.rate = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   FiatsCompanion.insert({
     required String code,
     required double rate,
+    this.rowid = const Value.absent(),
   })  : code = Value(code),
         rate = Value(rate);
   static Insertable<Fiat> custom({
     Expression<String>? code,
     Expression<double>? rate,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (code != null) 'code': code,
       if (rate != null) 'rate': rate,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  FiatsCompanion copyWith({Value<String>? code, Value<double>? rate}) {
+  FiatsCompanion copyWith(
+      {Value<String>? code, Value<double>? rate, Value<int>? rowid}) {
     return FiatsCompanion(
       code: code ?? this.code,
       rate: rate ?? this.rate,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -12827,6 +12872,9 @@ class FiatsCompanion extends UpdateCompanion<Fiat> {
     if (rate.present) {
       map['rate'] = Variable<double>(rate.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -12834,7 +12882,8 @@ class FiatsCompanion extends UpdateCompanion<Fiat> {
   String toString() {
     return (StringBuffer('FiatsCompanion(')
           ..write('code: $code, ')
-          ..write('rate: $rate')
+          ..write('rate: $rate, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -12842,7 +12891,6 @@ class FiatsCompanion extends UpdateCompanion<Fiat> {
 
 abstract class _$MixinDatabase extends GeneratedDatabase {
   _$MixinDatabase(QueryExecutor e) : super(e);
-  _$MixinDatabase.connect(DatabaseConnection c) : super.connect(c);
   late final FavoriteApps favoriteApps = FavoriteApps(this);
   late final Apps apps = Apps(this);
   late final StickerRelationships stickerRelationships =
@@ -12867,7 +12915,6 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
   late final ParticipantSession participantSession = ParticipantSession(this);
   late final ResendSessionMessages resendSessionMessages =
       ResendSessionMessages(this);
-  late final MessagesFts messagesFts = MessagesFts(this);
   late final Addresses addresses = Addresses(this);
   late final Jobs jobs = Jobs(this);
   late final MessagesHistory messagesHistory = MessagesHistory(this);
@@ -12914,9 +12961,6 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
   late final Index indexMessagesConversationIdQuoteMessageId = Index(
       'index_messages_conversation_id_quote_message_id',
       'CREATE INDEX IF NOT EXISTS index_messages_conversation_id_quote_message_id ON messages (conversation_id, quote_message_id)');
-  late final Trigger conversationLastMessageDelete = Trigger(
-      'CREATE TRIGGER IF NOT EXISTS conversation_last_message_delete AFTER DELETE ON messages BEGIN UPDATE conversations SET last_message_id = (SELECT message_id FROM messages WHERE conversation_id = old.conversation_id ORDER BY created_at DESC LIMIT 1) WHERE conversation_id = old.conversation_id;END',
-      'conversation_last_message_delete');
   late final AddressDao addressDao = AddressDao(this as MixinDatabase);
   late final AppDao appDao = AppDao(this as MixinDatabase);
   late final AssetDao assetDao = AssetDao(this as MixinDatabase);
@@ -13159,6 +13203,14 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
     });
   }
 
+  Selectable<int> countPinMessages() {
+    return customSelect('SELECT COUNT(1) AS _c0 FROM pin_messages',
+        variables: [],
+        readsFrom: {
+          pinMessages,
+        }).map((QueryRow row) => row.read<int>('_c0'));
+  }
+
   Selectable<DateTime> getLastBlazeMessageCreatedAt() {
     return customSelect(
         'SELECT created_at FROM flood_messages ORDER BY created_at DESC LIMIT 1',
@@ -13252,15 +13304,6 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
       'DELETE FROM circle_conversations WHERE circle_id = ?1',
       variables: [Variable<String>(circleId)],
       updates: {circleConversations},
-      updateKind: UpdateKind.delete,
-    );
-  }
-
-  Future<int> deleteCircleById(String circleId) {
-    return customUpdate(
-      'DELETE FROM circles WHERE circle_id = ?1',
-      variables: [Variable<String>(circleId)],
-      updates: {circles},
       updateKind: UpdateKind.delete,
     );
   }
@@ -13455,6 +13498,14 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
     });
   }
 
+  Selectable<int> countUsers() {
+    return customSelect('SELECT COUNT(*) AS _c0 FROM users',
+        variables: [],
+        readsFrom: {
+          users,
+        }).map((QueryRow row) => row.read<int>('_c0'));
+  }
+
   Selectable<Sticker> recentUsedStickers() {
     return customSelect(
         'SELECT * FROM stickers WHERE last_use_at > 0 ORDER BY last_use_at DESC LIMIT 20',
@@ -13475,6 +13526,14 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
           stickerRelationships,
           stickers,
         }).asyncMap(stickers.mapFromRow);
+  }
+
+  Selectable<int> countStickers() {
+    return customSelect('SELECT COUNT(1) AS _c0 FROM stickers',
+        variables: [],
+        readsFrom: {
+          stickers,
+        }).map((QueryRow row) => row.read<int>('_c0'));
   }
 
   Selectable<User> participantsAvatar(String conversationId) {
@@ -13606,6 +13665,14 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
           users,
           participants,
         }).map((QueryRow row) => row.read<String>('user_id'));
+  }
+
+  Selectable<int> countParticipants() {
+    return customSelect('SELECT COUNT(1) AS _c0 FROM participants',
+        variables: [],
+        readsFrom: {
+          participants,
+        }).map((QueryRow row) => row.read<int>('_c0'));
   }
 
   Selectable<MessageItem> baseMessageItems(BaseMessageItems$where where,
@@ -13912,312 +13979,6 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
     });
   }
 
-  Selectable<int> fuzzySearchMessageCountByCategories(
-      String query, List<String> categories) {
-    var $arrayStartIndex = 2;
-    final expandedcategories = $expandVar($arrayStartIndex, categories.length);
-    $arrayStartIndex += categories.length;
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts WHERE m.category IN ($expandedcategories) AND m.message_id = fts.message_id',
-        variables: [
-          Variable<String>(query),
-          for (var $ in categories) Variable<String>($)
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<SearchMessageDetailItem> fuzzySearchMessageByCategories(
-      String query,
-      List<String> categories,
-      FuzzySearchMessageByCategories$limit limit) {
-    var $arrayStartIndex = 2;
-    final expandedcategories = $expandVar($arrayStartIndex, categories.length);
-    $arrayStartIndex += categories.length;
-    final generatedlimit = $write(
-        limit(alias(this.messages, 'm'), alias(this.conversations, 'c'),
-            alias(this.users, 'u'), alias(this.users, 'owner')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedlimit.amountOfVariables;
-    return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.category IN ($expandedcategories) AND m.message_id = fts.message_id ORDER BY m.created_at DESC ${generatedlimit.sql}',
-        variables: [
-          Variable<String>(query),
-          for (var $ in categories) Variable<String>($),
-          ...generatedlimit.introducedVariables
-        ],
-        readsFrom: {
-          messages,
-          users,
-          conversations,
-          messagesFts,
-          ...generatedlimit.watchedTables,
-        }).map((QueryRow row) {
-      return SearchMessageDetailItem(
-        messageId: row.read<String>('messageId'),
-        senderId: row.read<String>('senderId'),
-        senderAvatarUrl: row.readNullable<String>('senderAvatarUrl'),
-        senderFullName: row.readNullable<String>('senderFullName'),
-        status: Messages.$converterstatus.fromSql(row.read<String>('status')),
-        type: row.read<String>('type'),
-        content: row.readNullable<String>('content'),
-        createdAt:
-            Messages.$convertercreatedAt.fromSql(row.read<int>('createdAt')),
-        mediaName: row.readNullable<String>('mediaName'),
-        appId: row.readNullable<String>('appId'),
-        verified: row.readNullable<bool>('verified'),
-        ownerId: row.readNullable<String>('ownerId'),
-        groupIconUrl: row.readNullable<String>('groupIconUrl'),
-        category: Conversations.$convertercategory
-            .fromSql(row.readNullable<String>('category')),
-        groupName: row.readNullable<String>('groupName'),
-        conversationId: row.read<String>('conversationId'),
-        ownerFullName: row.readNullable<String>('ownerFullName'),
-        ownerAvatarUrl: row.readNullable<String>('ownerAvatarUrl'),
-      );
-    });
-  }
-
-  Selectable<int> fuzzySearchMessageCount(String query) {
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts WHERE m.message_id = fts.message_id',
-        variables: [
-          Variable<String>(query)
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<int> fuzzySearchMessageCountWithConversation(
-      String query, FuzzySearchMessageCountWithConversation$where where) {
-    var $arrayStartIndex = 2;
-    final generatedwhere = $write(
-        where(alias(this.messages, 'm'), alias(this.conversations, 'c')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedwhere.amountOfVariables;
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id WHERE m.message_id = fts.message_id AND ${generatedwhere.sql}',
-        variables: [
-          Variable<String>(query),
-          ...generatedwhere.introducedVariables
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-          conversations,
-          ...generatedwhere.watchedTables,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<int> fuzzySearchMessageCountWithConversationOwner(
-      String query, FuzzySearchMessageCountWithConversationOwner$where where) {
-    var $arrayStartIndex = 2;
-    final generatedwhere = $write(
-        where(alias(this.messages, 'm'), alias(this.conversations, 'c'),
-            alias(this.users, 'u')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedwhere.amountOfVariables;
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON u.user_id = c.owner_id WHERE m.message_id = fts.message_id AND ${generatedwhere.sql}',
-        variables: [
-          Variable<String>(query),
-          ...generatedwhere.introducedVariables
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-          conversations,
-          users,
-          ...generatedwhere.watchedTables,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<int> fuzzySearchMessageCountWithCircle(
-      String query, FuzzySearchMessageCountWithCircle$where where) {
-    var $arrayStartIndex = 2;
-    final generatedwhere = $write(
-        where(alias(this.messages, 'm'), alias(this.conversations, 'c'),
-            alias(this.circleConversations, 'cc')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedwhere.amountOfVariables;
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN circle_conversations AS cc ON cc.conversation_id = c.conversation_id WHERE m.message_id = fts.message_id AND ${generatedwhere.sql}',
-        variables: [
-          Variable<String>(query),
-          ...generatedwhere.introducedVariables
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-          conversations,
-          circleConversations,
-          ...generatedwhere.watchedTables,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<SearchMessageDetailItem> fuzzySearchMessage(
-      String query, FuzzySearchMessage$where where, int limit, int offset) {
-    var $arrayStartIndex = 4;
-    final generatedwhere = $write(
-        where(alias(this.messages, 'm'), alias(this.conversations, 'c'),
-            alias(this.users, 'u'), alias(this.users, 'owner')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedwhere.amountOfVariables;
-    return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.message_id = fts.message_id AND ${generatedwhere.sql} ORDER BY m.created_at DESC LIMIT ?2 OFFSET ?3',
-        variables: [
-          Variable<String>(query),
-          Variable<int>(limit),
-          Variable<int>(offset),
-          ...generatedwhere.introducedVariables
-        ],
-        readsFrom: {
-          messages,
-          users,
-          conversations,
-          messagesFts,
-          ...generatedwhere.watchedTables,
-        }).map((QueryRow row) {
-      return SearchMessageDetailItem(
-        messageId: row.read<String>('messageId'),
-        senderId: row.read<String>('senderId'),
-        senderAvatarUrl: row.readNullable<String>('senderAvatarUrl'),
-        senderFullName: row.readNullable<String>('senderFullName'),
-        status: Messages.$converterstatus.fromSql(row.read<String>('status')),
-        type: row.read<String>('type'),
-        content: row.readNullable<String>('content'),
-        createdAt:
-            Messages.$convertercreatedAt.fromSql(row.read<int>('createdAt')),
-        mediaName: row.readNullable<String>('mediaName'),
-        appId: row.readNullable<String>('appId'),
-        verified: row.readNullable<bool>('verified'),
-        ownerId: row.readNullable<String>('ownerId'),
-        groupIconUrl: row.readNullable<String>('groupIconUrl'),
-        category: Conversations.$convertercategory
-            .fromSql(row.readNullable<String>('category')),
-        groupName: row.readNullable<String>('groupName'),
-        conversationId: row.read<String>('conversationId'),
-        ownerFullName: row.readNullable<String>('ownerFullName'),
-        ownerAvatarUrl: row.readNullable<String>('ownerAvatarUrl'),
-      );
-    });
-  }
-
-  Selectable<SearchMessageDetailItem> fuzzySearchMessageWithConversationOwner(
-      String query,
-      FuzzySearchMessageWithConversationOwner$where where,
-      int limit,
-      int offset) {
-    var $arrayStartIndex = 4;
-    final generatedwhere = $write(
-        where(alias(this.messages, 'm'), alias(this.conversations, 'c'),
-            alias(this.users, 'u'), alias(this.users, 'owner')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedwhere.amountOfVariables;
-    return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.message_id = fts.message_id AND ${generatedwhere.sql} ORDER BY m.created_at DESC LIMIT ?2 OFFSET ?3',
-        variables: [
-          Variable<String>(query),
-          Variable<int>(limit),
-          Variable<int>(offset),
-          ...generatedwhere.introducedVariables
-        ],
-        readsFrom: {
-          messages,
-          users,
-          conversations,
-          messagesFts,
-          ...generatedwhere.watchedTables,
-        }).map((QueryRow row) {
-      return SearchMessageDetailItem(
-        messageId: row.read<String>('messageId'),
-        senderId: row.read<String>('senderId'),
-        senderAvatarUrl: row.readNullable<String>('senderAvatarUrl'),
-        senderFullName: row.readNullable<String>('senderFullName'),
-        status: Messages.$converterstatus.fromSql(row.read<String>('status')),
-        type: row.read<String>('type'),
-        content: row.readNullable<String>('content'),
-        createdAt:
-            Messages.$convertercreatedAt.fromSql(row.read<int>('createdAt')),
-        mediaName: row.readNullable<String>('mediaName'),
-        appId: row.readNullable<String>('appId'),
-        verified: row.readNullable<bool>('verified'),
-        ownerId: row.readNullable<String>('ownerId'),
-        groupIconUrl: row.readNullable<String>('groupIconUrl'),
-        category: Conversations.$convertercategory
-            .fromSql(row.readNullable<String>('category')),
-        groupName: row.readNullable<String>('groupName'),
-        conversationId: row.read<String>('conversationId'),
-        ownerFullName: row.readNullable<String>('ownerFullName'),
-        ownerAvatarUrl: row.readNullable<String>('ownerAvatarUrl'),
-      );
-    });
-  }
-
-  Selectable<SearchMessageDetailItem> fuzzySearchMessageWithCircle(String query,
-      FuzzySearchMessageWithCircle$where where, int limit, int offset) {
-    var $arrayStartIndex = 4;
-    final generatedwhere = $write(
-        where(
-            alias(this.messages, 'm'),
-            alias(this.conversations, 'c'),
-            alias(this.users, 'u'),
-            alias(this.users, 'owner'),
-            alias(this.circleConversations, 'cc')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedwhere.amountOfVariables;
-    return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m,(SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?1) AS fts INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id INNER JOIN circle_conversations AS cc ON cc.conversation_id = c.conversation_id WHERE m.message_id = fts.message_id AND ${generatedwhere.sql} ORDER BY m.created_at DESC LIMIT ?2 OFFSET ?3',
-        variables: [
-          Variable<String>(query),
-          Variable<int>(limit),
-          Variable<int>(offset),
-          ...generatedwhere.introducedVariables
-        ],
-        readsFrom: {
-          messages,
-          users,
-          conversations,
-          messagesFts,
-          circleConversations,
-          ...generatedwhere.watchedTables,
-        }).map((QueryRow row) {
-      return SearchMessageDetailItem(
-        messageId: row.read<String>('messageId'),
-        senderId: row.read<String>('senderId'),
-        senderAvatarUrl: row.readNullable<String>('senderAvatarUrl'),
-        senderFullName: row.readNullable<String>('senderFullName'),
-        status: Messages.$converterstatus.fromSql(row.read<String>('status')),
-        type: row.read<String>('type'),
-        content: row.readNullable<String>('content'),
-        createdAt:
-            Messages.$convertercreatedAt.fromSql(row.read<int>('createdAt')),
-        mediaName: row.readNullable<String>('mediaName'),
-        appId: row.readNullable<String>('appId'),
-        verified: row.readNullable<bool>('verified'),
-        ownerId: row.readNullable<String>('ownerId'),
-        groupIconUrl: row.readNullable<String>('groupIconUrl'),
-        category: Conversations.$convertercategory
-            .fromSql(row.readNullable<String>('category')),
-        groupName: row.readNullable<String>('groupName'),
-        conversationId: row.read<String>('conversationId'),
-        ownerFullName: row.readNullable<String>('ownerFullName'),
-        ownerAvatarUrl: row.readNullable<String>('ownerAvatarUrl'),
-      );
-    });
-  }
-
   Selectable<NotificationMessage> notificationMessage(List<String> messageId) {
     var $arrayStartIndex = 1;
     final expandedmessageId = $expandVar($arrayStartIndex, messageId.length);
@@ -14263,104 +14024,36 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
     });
   }
 
-  Selectable<int> fuzzySearchMessageCountByConversationId(
-      String conversationId, String query) {
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m WHERE m.conversation_id = ?1 AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?2)',
-        variables: [
-          Variable<String>(conversationId),
-          Variable<String>(query)
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-        }).map((QueryRow row) => row.read<int>('_c0'));
+  Future<int> updateUnseenMessageCountAndLastMessageId(String conversationId,
+      String userId, String? lastMessageId, DateTime? lastMessageCreatedAt) {
+    return customUpdate(
+      'UPDATE conversations SET unseen_message_count = (SELECT count(1) FROM messages WHERE conversation_id = ?1 AND status IN (\'SENT\', \'DELIVERED\') AND user_id != ?2), last_message_id = ?3, last_message_created_at = ?4 WHERE conversation_id = ?1',
+      variables: [
+        Variable<String>(conversationId),
+        Variable<String>(userId),
+        Variable<String>(lastMessageId),
+        Variable<int>(NullAwareTypeConverter.wrapToSql(
+            Conversations.$converterlastMessageCreatedAt, lastMessageCreatedAt))
+      ],
+      updates: {conversations},
+      updateKind: UpdateKind.update,
+    );
   }
 
-  Selectable<int> fuzzySearchMessageCountByConversationIdAndCategories(
-      String conversationId, List<String> categories, String query) {
-    var $arrayStartIndex = 3;
-    final expandedcategories = $expandVar($arrayStartIndex, categories.length);
-    $arrayStartIndex += categories.length;
+  Selectable<SearchMessageDetailItem> getSearchMessageByIds(
+      List<String> messageIds) {
+    var $arrayStartIndex = 1;
+    final expandedmessageIds = $expandVar($arrayStartIndex, messageIds.length);
+    $arrayStartIndex += messageIds.length;
     return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m WHERE m.conversation_id = ?1 AND m.category IN ($expandedcategories) AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?2)',
+        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.message_id IN ($expandedmessageIds) ORDER BY m.created_at DESC, m."rowid" DESC',
         variables: [
-          Variable<String>(conversationId),
-          Variable<String>(query),
-          for (var $ in categories) Variable<String>($)
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<int> fuzzySearchMessageCountByConversationIdAndUserId(
-      String conversationId, String userId, String query) {
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m WHERE m.conversation_id = ?1 AND m.user_id = ?2 AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?3)',
-        variables: [
-          Variable<String>(conversationId),
-          Variable<String>(userId),
-          Variable<String>(query)
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<int> fuzzySearchMessageCountByConversationIdAndUserIdAndCategories(
-      String conversationId,
-      String userId,
-      List<String> categories,
-      String query) {
-    var $arrayStartIndex = 4;
-    final expandedcategories = $expandVar($arrayStartIndex, categories.length);
-    $arrayStartIndex += categories.length;
-    return customSelect(
-        'SELECT COUNT(1) AS _c0 FROM messages AS m WHERE m.conversation_id = ?1 AND m.user_id = ?2 AND m.category IN ($expandedcategories) AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?3)',
-        variables: [
-          Variable<String>(conversationId),
-          Variable<String>(userId),
-          Variable<String>(query),
-          for (var $ in categories) Variable<String>($)
-        ],
-        readsFrom: {
-          messages,
-          messagesFts,
-        }).map((QueryRow row) => row.read<int>('_c0'));
-  }
-
-  Selectable<SearchMessageDetailItem>
-      fuzzySearchMessageByConversationIdAndCategories(
-          String conversationId,
-          List<String> categories,
-          String query,
-          FuzzySearchMessageByConversationIdAndCategories$limit limit) {
-    var $arrayStartIndex = 3;
-    final expandedcategories = $expandVar($arrayStartIndex, categories.length);
-    $arrayStartIndex += categories.length;
-    final generatedlimit = $write(
-        limit(alias(this.messages, 'm'), alias(this.conversations, 'c'),
-            alias(this.users, 'u'), alias(this.users, 'owner')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedlimit.amountOfVariables;
-    return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.conversation_id = ?1 AND m.category IN ($expandedcategories) AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?2) ORDER BY m.created_at DESC ${generatedlimit.sql}',
-        variables: [
-          Variable<String>(conversationId),
-          Variable<String>(query),
-          for (var $ in categories) Variable<String>($),
-          ...generatedlimit.introducedVariables
+          for (var $ in messageIds) Variable<String>($)
         ],
         readsFrom: {
           messages,
           users,
           conversations,
-          messagesFts,
-          ...generatedlimit.watchedTables,
         }).map((QueryRow row) {
       return SearchMessageDetailItem(
         messageId: row.read<String>('messageId'),
@@ -14387,43 +14080,21 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
     });
   }
 
-  Selectable<SearchMessageDetailItem> fuzzySearchMessageByConversationId(
-      String conversationId, String query, int limit, int offset) {
+  Selectable<MiniMessageItem> miniMessageByIds(List<String> messageIds) {
+    var $arrayStartIndex = 1;
+    final expandedmessageIds = $expandVar($arrayStartIndex, messageIds.length);
+    $arrayStartIndex += messageIds.length;
     return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.conversation_id = ?1 AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?2) ORDER BY m.created_at DESC LIMIT ?3 OFFSET ?4',
+        'SELECT conversation_id AS conversationId, message_id AS messageId FROM messages WHERE message_id IN ($expandedmessageIds)',
         variables: [
-          Variable<String>(conversationId),
-          Variable<String>(query),
-          Variable<int>(limit),
-          Variable<int>(offset)
+          for (var $ in messageIds) Variable<String>($)
         ],
         readsFrom: {
           messages,
-          users,
-          conversations,
-          messagesFts,
         }).map((QueryRow row) {
-      return SearchMessageDetailItem(
-        messageId: row.read<String>('messageId'),
-        senderId: row.read<String>('senderId'),
-        senderAvatarUrl: row.readNullable<String>('senderAvatarUrl'),
-        senderFullName: row.readNullable<String>('senderFullName'),
-        status: Messages.$converterstatus.fromSql(row.read<String>('status')),
-        type: row.read<String>('type'),
-        content: row.readNullable<String>('content'),
-        createdAt:
-            Messages.$convertercreatedAt.fromSql(row.read<int>('createdAt')),
-        mediaName: row.readNullable<String>('mediaName'),
-        appId: row.readNullable<String>('appId'),
-        verified: row.readNullable<bool>('verified'),
-        ownerId: row.readNullable<String>('ownerId'),
-        groupIconUrl: row.readNullable<String>('groupIconUrl'),
-        category: Conversations.$convertercategory
-            .fromSql(row.readNullable<String>('category')),
-        groupName: row.readNullable<String>('groupName'),
+      return MiniMessageItem(
         conversationId: row.read<String>('conversationId'),
-        ownerFullName: row.readNullable<String>('ownerFullName'),
-        ownerAvatarUrl: row.readNullable<String>('ownerAvatarUrl'),
+        messageId: row.read<String>('messageId'),
       );
     });
   }
@@ -14444,7 +14115,7 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
         startIndex: $arrayStartIndex);
     $arrayStartIndex += generatedlimit.amountOfVariables;
     return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE ${generatedwhere.sql} ORDER BY m.created_at DESC ${generatedlimit.sql}',
+        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE ${generatedwhere.sql} ORDER BY m.created_at DESC, m."rowid" DESC ${generatedlimit.sql}',
         variables: [
           ...generatedwhere.introducedVariables,
           ...generatedlimit.introducedVariables
@@ -14481,121 +14152,21 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
     });
   }
 
-  Selectable<SearchMessageDetailItem>
-      fuzzySearchMessageByConversationIdAndUserIdAndCategories(
-          String conversationId,
-          String userId,
-          List<String> categories,
-          String query,
-          FuzzySearchMessageByConversationIdAndUserIdAndCategories$limit
-              limit) {
-    var $arrayStartIndex = 4;
-    final expandedcategories = $expandVar($arrayStartIndex, categories.length);
-    $arrayStartIndex += categories.length;
-    final generatedlimit = $write(
-        limit(alias(this.messages, 'm'), alias(this.conversations, 'c'),
-            alias(this.users, 'u'), alias(this.users, 'owner')),
-        hasMultipleTables: true,
-        startIndex: $arrayStartIndex);
-    $arrayStartIndex += generatedlimit.amountOfVariables;
-    return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.conversation_id = ?1 AND m.user_id = ?2 AND m.category IN ($expandedcategories) AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?3) ORDER BY m.created_at DESC ${generatedlimit.sql}',
-        variables: [
-          Variable<String>(conversationId),
-          Variable<String>(userId),
-          Variable<String>(query),
-          for (var $ in categories) Variable<String>($),
-          ...generatedlimit.introducedVariables
-        ],
+  Selectable<int> countMessages() {
+    return customSelect('SELECT count(1) AS _c0 FROM messages',
+        variables: [],
         readsFrom: {
           messages,
-          users,
-          conversations,
-          messagesFts,
-          ...generatedlimit.watchedTables,
-        }).map((QueryRow row) {
-      return SearchMessageDetailItem(
-        messageId: row.read<String>('messageId'),
-        senderId: row.read<String>('senderId'),
-        senderAvatarUrl: row.readNullable<String>('senderAvatarUrl'),
-        senderFullName: row.readNullable<String>('senderFullName'),
-        status: Messages.$converterstatus.fromSql(row.read<String>('status')),
-        type: row.read<String>('type'),
-        content: row.readNullable<String>('content'),
-        createdAt:
-            Messages.$convertercreatedAt.fromSql(row.read<int>('createdAt')),
-        mediaName: row.readNullable<String>('mediaName'),
-        appId: row.readNullable<String>('appId'),
-        verified: row.readNullable<bool>('verified'),
-        ownerId: row.readNullable<String>('ownerId'),
-        groupIconUrl: row.readNullable<String>('groupIconUrl'),
-        category: Conversations.$convertercategory
-            .fromSql(row.readNullable<String>('category')),
-        groupName: row.readNullable<String>('groupName'),
-        conversationId: row.read<String>('conversationId'),
-        ownerFullName: row.readNullable<String>('ownerFullName'),
-        ownerAvatarUrl: row.readNullable<String>('ownerAvatarUrl'),
-      );
-    });
+        }).map((QueryRow row) => row.read<int>('_c0'));
   }
 
-  Selectable<SearchMessageDetailItem>
-      fuzzySearchMessageByConversationIdAndUserId(String conversationId,
-          String userId, String query, int limit, int offset) {
+  Selectable<int> countMediaMessages() {
     return customSelect(
-        'SELECT m.message_id AS messageId, u.user_id AS senderId, u.avatar_url AS senderAvatarUrl, u.full_name AS senderFullName, m.status AS status, m.category AS type, m.content AS content, m.created_at AS createdAt, m.name AS mediaName, u.app_id AS appId, u.is_verified AS verified, c.owner_id AS ownerId, c.icon_url AS groupIconUrl, c.category AS category, c.name AS groupName, c.conversation_id AS conversationId, owner.full_name AS ownerFullName, owner.avatar_url AS ownerAvatarUrl FROM messages AS m INNER JOIN conversations AS c ON c.conversation_id = m.conversation_id INNER JOIN users AS u ON m.user_id = u.user_id INNER JOIN users AS owner ON c.owner_id = owner.user_id WHERE m.conversation_id = ?1 AND m.user_id = ?2 AND m.message_id IN (SELECT message_id FROM messages_fts WHERE messages_fts MATCH ?3) ORDER BY m.created_at DESC LIMIT ?4 OFFSET ?5',
-        variables: [
-          Variable<String>(conversationId),
-          Variable<String>(userId),
-          Variable<String>(query),
-          Variable<int>(limit),
-          Variable<int>(offset)
-        ],
+        'SELECT count(1) AS _c0 FROM messages WHERE category IN (\'SIGNAL_IMAGE\', \'SIGNAL_VIDEO\', \'SIGNAL_DATA\', \'SIGNAL_AUDIO\', \'PLAIN_IMAGE\', \'PLAIN_VIDEO\', \'PLAIN_DATA\', \'PLAIN_AUDIO\', \'ENCRYPTED_IMAGE\', \'ENCRYPTED_VIDEO\', \'ENCRYPTED_DATA\', \'ENCRYPTED_AUDIO\')',
+        variables: [],
         readsFrom: {
           messages,
-          users,
-          conversations,
-          messagesFts,
-        }).map((QueryRow row) {
-      return SearchMessageDetailItem(
-        messageId: row.read<String>('messageId'),
-        senderId: row.read<String>('senderId'),
-        senderAvatarUrl: row.readNullable<String>('senderAvatarUrl'),
-        senderFullName: row.readNullable<String>('senderFullName'),
-        status: Messages.$converterstatus.fromSql(row.read<String>('status')),
-        type: row.read<String>('type'),
-        content: row.readNullable<String>('content'),
-        createdAt:
-            Messages.$convertercreatedAt.fromSql(row.read<int>('createdAt')),
-        mediaName: row.readNullable<String>('mediaName'),
-        appId: row.readNullable<String>('appId'),
-        verified: row.readNullable<bool>('verified'),
-        ownerId: row.readNullable<String>('ownerId'),
-        groupIconUrl: row.readNullable<String>('groupIconUrl'),
-        category: Conversations.$convertercategory
-            .fromSql(row.readNullable<String>('category')),
-        groupName: row.readNullable<String>('groupName'),
-        conversationId: row.read<String>('conversationId'),
-        ownerFullName: row.readNullable<String>('ownerFullName'),
-        ownerAvatarUrl: row.readNullable<String>('ownerAvatarUrl'),
-      );
-    });
-  }
-
-  Future<int> updateUnseenMessageCountAndLastMessageId(String conversationId,
-      String userId, String? lastMessageId, DateTime? lastMessageCreatedAt) {
-    return customUpdate(
-      'UPDATE conversations SET unseen_message_count = (SELECT count(1) FROM messages WHERE conversation_id = ?1 AND status IN (\'SENT\', \'DELIVERED\') AND user_id != ?2), last_message_id = ?3, last_message_created_at = ?4 WHERE conversation_id = ?1',
-      variables: [
-        Variable<String>(conversationId),
-        Variable<String>(userId),
-        Variable<String>(lastMessageId),
-        Variable<int>(NullAwareTypeConverter.wrapToSql(
-            Conversations.$converterlastMessageCreatedAt, lastMessageCreatedAt))
-      ],
-      updates: {conversations},
-      updateKind: UpdateKind.update,
-    );
+        }).map((QueryRow row) => row.read<int>('_c0'));
   }
 
   Selectable<int> baseConversationItemCount(
@@ -15158,6 +14729,14 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
     });
   }
 
+  Selectable<int> countConversations() {
+    return customSelect('SELECT COUNT(1) AS _c0 FROM conversations',
+        variables: [],
+        readsFrom: {
+          conversations,
+        }).map((QueryRow row) => row.read<int>('_c0'));
+  }
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -15184,7 +14763,6 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
         participants,
         participantSession,
         resendSessionMessages,
-        messagesFts,
         addresses,
         jobs,
         messagesHistory,
@@ -15204,8 +14782,7 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
         indexMessagesConversationIdCreatedAt,
         indexMessagesConversationIdCategoryCreatedAt,
         indexMessageConversationIdStatusUserId,
-        indexMessagesConversationIdQuoteMessageId,
-        conversationLastMessageDelete
+        indexMessagesConversationIdQuoteMessageId
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -15222,13 +14799,6 @@ abstract class _$MixinDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('participants', kind: UpdateKind.delete),
-            ],
-          ),
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('messages',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('conversations', kind: UpdateKind.update),
             ],
           ),
         ],
@@ -16267,128 +15837,6 @@ class SendingMessage {
   }
 }
 
-class SearchMessageDetailItem {
-  final String messageId;
-  final String senderId;
-  final String? senderAvatarUrl;
-  final String? senderFullName;
-  final MessageStatus status;
-  final String type;
-  final String? content;
-  final DateTime createdAt;
-  final String? mediaName;
-  final String? appId;
-  final bool? verified;
-  final String? ownerId;
-  final String? groupIconUrl;
-  final ConversationCategory? category;
-  final String? groupName;
-  final String conversationId;
-  final String? ownerFullName;
-  final String? ownerAvatarUrl;
-  SearchMessageDetailItem({
-    required this.messageId,
-    required this.senderId,
-    this.senderAvatarUrl,
-    this.senderFullName,
-    required this.status,
-    required this.type,
-    this.content,
-    required this.createdAt,
-    this.mediaName,
-    this.appId,
-    this.verified,
-    this.ownerId,
-    this.groupIconUrl,
-    this.category,
-    this.groupName,
-    required this.conversationId,
-    this.ownerFullName,
-    this.ownerAvatarUrl,
-  });
-  @override
-  int get hashCode => Object.hash(
-      messageId,
-      senderId,
-      senderAvatarUrl,
-      senderFullName,
-      status,
-      type,
-      content,
-      createdAt,
-      mediaName,
-      appId,
-      verified,
-      ownerId,
-      groupIconUrl,
-      category,
-      groupName,
-      conversationId,
-      ownerFullName,
-      ownerAvatarUrl);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is SearchMessageDetailItem &&
-          other.messageId == this.messageId &&
-          other.senderId == this.senderId &&
-          other.senderAvatarUrl == this.senderAvatarUrl &&
-          other.senderFullName == this.senderFullName &&
-          other.status == this.status &&
-          other.type == this.type &&
-          other.content == this.content &&
-          other.createdAt == this.createdAt &&
-          other.mediaName == this.mediaName &&
-          other.appId == this.appId &&
-          other.verified == this.verified &&
-          other.ownerId == this.ownerId &&
-          other.groupIconUrl == this.groupIconUrl &&
-          other.category == this.category &&
-          other.groupName == this.groupName &&
-          other.conversationId == this.conversationId &&
-          other.ownerFullName == this.ownerFullName &&
-          other.ownerAvatarUrl == this.ownerAvatarUrl);
-  @override
-  String toString() {
-    return (StringBuffer('SearchMessageDetailItem(')
-          ..write('messageId: $messageId, ')
-          ..write('senderId: $senderId, ')
-          ..write('senderAvatarUrl: $senderAvatarUrl, ')
-          ..write('senderFullName: $senderFullName, ')
-          ..write('status: $status, ')
-          ..write('type: $type, ')
-          ..write('content: $content, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('mediaName: $mediaName, ')
-          ..write('appId: $appId, ')
-          ..write('verified: $verified, ')
-          ..write('ownerId: $ownerId, ')
-          ..write('groupIconUrl: $groupIconUrl, ')
-          ..write('category: $category, ')
-          ..write('groupName: $groupName, ')
-          ..write('conversationId: $conversationId, ')
-          ..write('ownerFullName: $ownerFullName, ')
-          ..write('ownerAvatarUrl: $ownerAvatarUrl')
-          ..write(')'))
-        .toString();
-  }
-}
-
-typedef FuzzySearchMessageByCategories$limit = Limit Function(
-    Messages m, Conversations c, Users u, Users owner);
-typedef FuzzySearchMessageCountWithConversation$where = Expression<bool>
-    Function(Messages m, Conversations c);
-typedef FuzzySearchMessageCountWithConversationOwner$where = Expression<bool>
-    Function(Messages m, Conversations c, Users u);
-typedef FuzzySearchMessageCountWithCircle$where = Expression<bool> Function(
-    Messages m, Conversations c, CircleConversations cc);
-typedef FuzzySearchMessage$where = Expression<bool> Function(
-    Messages m, Conversations c, Users u, Users owner);
-typedef FuzzySearchMessageWithConversationOwner$where = Expression<bool>
-    Function(Messages m, Conversations c, Users u, Users owner);
-typedef FuzzySearchMessageWithCircle$where = Expression<bool> Function(
-    Messages m, Conversations c, Users u, Users owner, CircleConversations cc);
-
 class NotificationMessage {
   final String messageId;
   final String conversationId;
@@ -16501,14 +15949,142 @@ class NotificationMessage {
   }
 }
 
-typedef FuzzySearchMessageByConversationIdAndCategories$limit = Limit Function(
-    Messages m, Conversations c, Users u, Users owner);
+class SearchMessageDetailItem {
+  final String messageId;
+  final String senderId;
+  final String? senderAvatarUrl;
+  final String? senderFullName;
+  final MessageStatus status;
+  final String type;
+  final String? content;
+  final DateTime createdAt;
+  final String? mediaName;
+  final String? appId;
+  final bool? verified;
+  final String? ownerId;
+  final String? groupIconUrl;
+  final ConversationCategory? category;
+  final String? groupName;
+  final String conversationId;
+  final String? ownerFullName;
+  final String? ownerAvatarUrl;
+  SearchMessageDetailItem({
+    required this.messageId,
+    required this.senderId,
+    this.senderAvatarUrl,
+    this.senderFullName,
+    required this.status,
+    required this.type,
+    this.content,
+    required this.createdAt,
+    this.mediaName,
+    this.appId,
+    this.verified,
+    this.ownerId,
+    this.groupIconUrl,
+    this.category,
+    this.groupName,
+    required this.conversationId,
+    this.ownerFullName,
+    this.ownerAvatarUrl,
+  });
+  @override
+  int get hashCode => Object.hash(
+      messageId,
+      senderId,
+      senderAvatarUrl,
+      senderFullName,
+      status,
+      type,
+      content,
+      createdAt,
+      mediaName,
+      appId,
+      verified,
+      ownerId,
+      groupIconUrl,
+      category,
+      groupName,
+      conversationId,
+      ownerFullName,
+      ownerAvatarUrl);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SearchMessageDetailItem &&
+          other.messageId == this.messageId &&
+          other.senderId == this.senderId &&
+          other.senderAvatarUrl == this.senderAvatarUrl &&
+          other.senderFullName == this.senderFullName &&
+          other.status == this.status &&
+          other.type == this.type &&
+          other.content == this.content &&
+          other.createdAt == this.createdAt &&
+          other.mediaName == this.mediaName &&
+          other.appId == this.appId &&
+          other.verified == this.verified &&
+          other.ownerId == this.ownerId &&
+          other.groupIconUrl == this.groupIconUrl &&
+          other.category == this.category &&
+          other.groupName == this.groupName &&
+          other.conversationId == this.conversationId &&
+          other.ownerFullName == this.ownerFullName &&
+          other.ownerAvatarUrl == this.ownerAvatarUrl);
+  @override
+  String toString() {
+    return (StringBuffer('SearchMessageDetailItem(')
+          ..write('messageId: $messageId, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderAvatarUrl: $senderAvatarUrl, ')
+          ..write('senderFullName: $senderFullName, ')
+          ..write('status: $status, ')
+          ..write('type: $type, ')
+          ..write('content: $content, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('mediaName: $mediaName, ')
+          ..write('appId: $appId, ')
+          ..write('verified: $verified, ')
+          ..write('ownerId: $ownerId, ')
+          ..write('groupIconUrl: $groupIconUrl, ')
+          ..write('category: $category, ')
+          ..write('groupName: $groupName, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('ownerFullName: $ownerFullName, ')
+          ..write('ownerAvatarUrl: $ownerAvatarUrl')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class MiniMessageItem {
+  final String conversationId;
+  final String messageId;
+  MiniMessageItem({
+    required this.conversationId,
+    required this.messageId,
+  });
+  @override
+  int get hashCode => Object.hash(conversationId, messageId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MiniMessageItem &&
+          other.conversationId == this.conversationId &&
+          other.messageId == this.messageId);
+  @override
+  String toString() {
+    return (StringBuffer('MiniMessageItem(')
+          ..write('conversationId: $conversationId, ')
+          ..write('messageId: $messageId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 typedef SearchMessage$where = Expression<bool> Function(
     Messages m, Conversations c, Users u, Users owner);
 typedef SearchMessage$limit = Limit Function(
     Messages m, Conversations c, Users u, Users owner);
-typedef FuzzySearchMessageByConversationIdAndUserIdAndCategories$limit = Limit
-    Function(Messages m, Conversations c, Users u, Users owner);
 typedef BaseConversationItemCount$where = Expression<bool> Function(
     Conversations conversation,
     Users owner,

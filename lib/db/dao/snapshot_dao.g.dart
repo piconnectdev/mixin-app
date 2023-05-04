@@ -9,6 +9,35 @@ mixin _$SnapshotDaoMixin on DatabaseAccessor<MixinDatabase> {
   Assets get assets => attachedDatabase.assets;
   Chains get chains => attachedDatabase.chains;
   Fiats get fiats => attachedDatabase.fiats;
+  Addresses get addresses => attachedDatabase.addresses;
+  Apps get apps => attachedDatabase.apps;
+  CircleConversations get circleConversations =>
+      attachedDatabase.circleConversations;
+  Circles get circles => attachedDatabase.circles;
+  Conversations get conversations => attachedDatabase.conversations;
+  FloodMessages get floodMessages => attachedDatabase.floodMessages;
+  Hyperlinks get hyperlinks => attachedDatabase.hyperlinks;
+  Jobs get jobs => attachedDatabase.jobs;
+  MessageMentions get messageMentions => attachedDatabase.messageMentions;
+  Messages get messages => attachedDatabase.messages;
+  MessagesHistory get messagesHistory => attachedDatabase.messagesHistory;
+  Offsets get offsets => attachedDatabase.offsets;
+  ParticipantSession get participantSession =>
+      attachedDatabase.participantSession;
+  Participants get participants => attachedDatabase.participants;
+  ResendSessionMessages get resendSessionMessages =>
+      attachedDatabase.resendSessionMessages;
+  SentSessionSenderKeys get sentSessionSenderKeys =>
+      attachedDatabase.sentSessionSenderKeys;
+  StickerAlbums get stickerAlbums => attachedDatabase.stickerAlbums;
+  StickerRelationships get stickerRelationships =>
+      attachedDatabase.stickerRelationships;
+  Stickers get stickers => attachedDatabase.stickers;
+  TranscriptMessages get transcriptMessages =>
+      attachedDatabase.transcriptMessages;
+  PinMessages get pinMessages => attachedDatabase.pinMessages;
+  FavoriteApps get favoriteApps => attachedDatabase.favoriteApps;
+  ExpiredMessages get expiredMessages => attachedDatabase.expiredMessages;
   Selectable<SnapshotItem> snapshotItems(
       String currentFiat,
       SnapshotItems$where where,
@@ -78,6 +107,9 @@ mixin _$SnapshotDaoMixin on DatabaseAccessor<MixinDatabase> {
         receiver: row.readNullable<String>('receiver'),
         memo: row.readNullable<String>('memo'),
         confirmations: row.readNullable<int>('confirmations'),
+        snapshotHash: row.readNullable<String>('snapshot_hash'),
+        openingBalance: row.readNullable<String>('opening_balance'),
+        closingBalance: row.readNullable<String>('closing_balance'),
         avatarUrl: row.readNullable<String>('avatar_url'),
         opponentFulName: row.readNullable<String>('opponent_ful_name'),
         priceUsd: row.readNullable<String>('price_usd'),
@@ -91,6 +123,14 @@ mixin _$SnapshotDaoMixin on DatabaseAccessor<MixinDatabase> {
         fiatRate: row.readNullable<double>('fiatRate'),
       );
     });
+  }
+
+  Selectable<int> countSnapshots() {
+    return customSelect('SELECT COUNT(1) AS _c0 FROM snapshots',
+        variables: [],
+        readsFrom: {
+          snapshots,
+        }).map((QueryRow row) => row.read<int>('_c0'));
   }
 }
 
@@ -107,6 +147,9 @@ class SnapshotItem {
   final String? receiver;
   final String? memo;
   final int? confirmations;
+  final String? snapshotHash;
+  final String? openingBalance;
+  final String? closingBalance;
   final String? avatarUrl;
   final String? opponentFulName;
   final String? priceUsd;
@@ -131,6 +174,9 @@ class SnapshotItem {
     this.receiver,
     this.memo,
     this.confirmations,
+    this.snapshotHash,
+    this.openingBalance,
+    this.closingBalance,
     this.avatarUrl,
     this.opponentFulName,
     this.priceUsd,
@@ -157,6 +203,9 @@ class SnapshotItem {
         receiver,
         memo,
         confirmations,
+        snapshotHash,
+        openingBalance,
+        closingBalance,
         avatarUrl,
         opponentFulName,
         priceUsd,
@@ -185,6 +234,9 @@ class SnapshotItem {
           other.receiver == this.receiver &&
           other.memo == this.memo &&
           other.confirmations == this.confirmations &&
+          other.snapshotHash == this.snapshotHash &&
+          other.openingBalance == this.openingBalance &&
+          other.closingBalance == this.closingBalance &&
           other.avatarUrl == this.avatarUrl &&
           other.opponentFulName == this.opponentFulName &&
           other.priceUsd == this.priceUsd &&
@@ -211,6 +263,9 @@ class SnapshotItem {
           ..write('receiver: $receiver, ')
           ..write('memo: $memo, ')
           ..write('confirmations: $confirmations, ')
+          ..write('snapshotHash: $snapshotHash, ')
+          ..write('openingBalance: $openingBalance, ')
+          ..write('closingBalance: $closingBalance, ')
           ..write('avatarUrl: $avatarUrl, ')
           ..write('opponentFulName: $opponentFulName, ')
           ..write('priceUsd: $priceUsd, ')

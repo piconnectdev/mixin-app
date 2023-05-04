@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:markdown_widget/markdown_widget.dart';
 
 import '../../../constants/resources.dart';
 import '../../../db/mixin_database.dart' hide Offset, Message;
@@ -79,21 +79,12 @@ class MessagePost extends StatelessWidget {
                       minWidth: 128,
                       maxHeight: 400,
                     ),
-                    child: SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      child: IntrinsicWidth(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: MarkdownGenerator(
-                                data: postContent,
-                                styleConfig: buildMarkdownStyleConfig(
-                                  context,
-                                  context.brightnessValue != 0,
-                                ),
-                              ).widgets ??
-                              [],
-                        ),
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context)
+                          .copyWith(scrollbars: false),
+                      child: SingleChildScrollView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        child: MarkdownColumn(data: postContent),
                       ),
                     ),
                   );
@@ -164,10 +155,8 @@ class PostPreview extends StatelessWidget {
   final MessageItem message;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-        decoration: BoxDecoration(
-          color: context.theme.background,
-        ),
+  Widget build(BuildContext context) => Material(
+        color: context.theme.background,
         child: Column(
           children: [
             MixinAppBar(
@@ -183,7 +172,6 @@ class PostPreview extends StatelessWidget {
                 data: message.content ?? '',
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                darkMode: context.brightnessValue != 0,
               ),
             ),
           ],
@@ -206,7 +194,7 @@ class _PostTextSelectionControls extends TextSelectionControls {
           Offset position,
           List<TextSelectionPoint> endpoints,
           TextSelectionDelegate delegate,
-          ClipboardStatusNotifier? clipboardStatus,
+          ValueListenable<ClipboardStatus>? clipboardStatus,
           Offset? lastSecondaryTapDownPosition) =>
       const SizedBox.shrink();
 

@@ -9,6 +9,7 @@ import 'package:mixin_bot_sdk_dart/mixin_bot_sdk_dart.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../constants/resources.dart';
+import '../../../db/database_event_bus.dart';
 import '../../../db/mixin_database.dart';
 import '../../../enum/message_category.dart';
 import '../../../utils/extension/extension.dart';
@@ -67,7 +68,13 @@ class ChatInfoPage extends HookWidget {
     final announcement = useMemoizedStream<String?>(
       () => context.database.conversationDao
           .announcement(conversationId)
-          .watchSingleThrottle(kVerySlowThrottleDuration),
+          .watchSingleWithStream(
+        eventStreams: [
+          DataBaseEventBus.instance
+              .watchUpdateConversationStream([conversationId])
+        ],
+        duration: kVerySlowThrottleDuration,
+      ),
       keys: [conversationId],
     ).data;
     if (!conversation.isLoaded) return const SizedBox();
@@ -168,9 +175,15 @@ class ChatInfoPage extends HookWidget {
                                 return;
                               }
 
-                              i('share contact ${user.userId} ${user.codeUrl}');
+                              final codeUrl = user.codeUrl;
+                              if (codeUrl == null) {
+                                e('can not find codeUrl $codeUrl');
+                                return;
+                              }
+
+                              i('share contact ${user.userId} $codeUrl');
                               await Clipboard.setData(
-                                  ClipboardData(text: user.codeUrl));
+                                  ClipboardData(text: codeUrl));
                             },
                           ),
                         ],
@@ -373,7 +386,7 @@ class ChatInfoPage extends HookWidget {
               ),
             CellGroup(
               child: CellItem(
-                title: Text(context.l10n.editCircleName),
+                title: Text(context.l10n.editConversations),
                 onTap: () => context
                     .read<ChatSideCubit>()
                     .pushPage(ChatSideCubit.circles),
@@ -393,8 +406,7 @@ class ChatInfoPage extends HookWidget {
                           context,
                           context.l10n.unblock,
                         );
-                        if (!result) return;
-
+                        if (result == null) return;
                         await runFutureWithToast(
                           accountServer.unblockUser(conversation.userId!),
                         );
@@ -414,8 +426,7 @@ class ChatInfoPage extends HookWidget {
                             context,
                             title,
                           );
-                          if (!result) return;
-
+                          if (result == null) return;
                           await runFutureWithToast(
                             accountServer.removeUser(conversation.userId!),
                           );
@@ -432,8 +443,7 @@ class ChatInfoPage extends HookWidget {
                           context,
                           context.l10n.block,
                         );
-                        if (!result) return;
-
+                        if (result == null) return;
                         await runFutureWithToast(
                           accountServer.blockUser(conversation.userId!),
                         );
@@ -448,8 +458,7 @@ class ChatInfoPage extends HookWidget {
                         context,
                         context.l10n.clearChat,
                       );
-                      if (!result) return;
-
+                      if (result == null) return;
                       await accountServer.database.messageDao
                           .deleteMessageByConversationId(conversationId);
                       context.read<MessageBloc>().reload();
@@ -466,8 +475,7 @@ class ChatInfoPage extends HookWidget {
                             context,
                             context.l10n.exitGroup,
                           );
-                          if (!result) return;
-
+                          if (result == null) return;
                           await runFutureWithToast(
                             accountServer.exitGroup(conversationId),
                           );
@@ -488,8 +496,7 @@ class ChatInfoPage extends HookWidget {
                             context,
                             context.l10n.deleteGroup,
                           );
-                          if (!result) return;
-
+                          if (result == null) return;
                           await context.database.messageDao
                               .deleteMessageByConversationId(conversationId);
                           await context.database.conversationDao
@@ -519,7 +526,7 @@ class ChatInfoPage extends HookWidget {
                       context,
                       context.l10n.reportAndBlock,
                     );
-                    if (!result) return;
+                    if (result == null) return;
                     final userId = conversation.userId;
                     if (userId == null) return;
 
@@ -563,11 +570,20 @@ class ConversationBio extends HookWidget {
       if (isGroup) {
         return database.conversationDao
             .announcement(conversationId)
-            .watchSingleThrottle(kVerySlowThrottleDuration);
+            .watchSingleWithStream(
+          eventStreams: [
+            DataBaseEventBus.instance
+                .watchUpdateConversationStream([conversationId])
+          ],
+          duration: kVerySlowThrottleDuration,
+        );
       }
-      return database.userDao
-          .biography(userId!)
-          .watchSingleThrottle(kVerySlowThrottleDuration);
+      return database.userDao.biography(userId!).watchSingleWithStream(
+        eventStreams: [
+          DataBaseEventBus.instance.watchUpdateUserStream([userId!])
+        ],
+        duration: kVerySlowThrottleDuration,
+      );
     }, [
       conversationId,
       userId,
@@ -650,7 +666,9 @@ class _SharedApps extends HookWidget {
     final apps = useMemoizedStream(
         () => context.database.favoriteAppDao
             .getFavoriteAppsByUserId(userId)
-            .watch(),
+            .watchWithStream(
+                eventStreams: [DataBaseEventBus.instance.updateAppIdStream],
+                duration: kVerySlowThrottleDuration),
         keys: [userId]);
 
     final data = apps.data ?? const [];

@@ -4,9 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:mixin_bot_sdk_dart/mixin_bot_sdk_dart.dart'
     hide Snapshot, Asset, User;
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../db/dao/snapshot_dao.dart';
+import '../../../../db/database_event_bus.dart';
 import '../../../../db/mixin_database.dart' hide Offset;
 import '../../../../utils/extension/extension.dart';
 import '../../../../utils/hook.dart';
@@ -37,19 +37,33 @@ class _TransferPage extends HookWidget {
     }, []);
 
     final snapshotItem = useMemoizedStream(() => context.database.snapshotDao
-        .snapshotItemById(
-            snapshotId, context.multiAuthState.currentUser!.fiatCurrency)
-        .watchSingleOrNullThrottle(kDefaultThrottleDuration)).data;
+            .snapshotItemById(
+          snapshotId,
+          context.multiAuthState.currentUser!.fiatCurrency,
+        )
+            .watchSingleOrNullWithStream(
+          eventStreams: [
+            DataBaseEventBus.instance.updateSnapshotStream.where((event) =>
+                event.any((element) => element.contains(snapshotId))),
+            DataBaseEventBus.instance.updateAssetStream,
+          ],
+          duration: kDefaultThrottleDuration,
+        )).data;
 
     final opponentFullName = useMemoizedStream<User?>(() {
       final opponentId = snapshotItem?.opponentId;
       if (opponentId != null && opponentId.trim().isNotEmpty) {
         final stream = context.database.userDao
             .userById(opponentId)
-            .watchSingleOrNullThrottle(kSlowThrottleDuration);
-        return stream.doOnData((event) {
-          if (event != null) return;
-          context.accountServer.refreshUsers([opponentId]);
+            .watchSingleOrNullWithStream(
+          eventStreams: [
+            DataBaseEventBus.instance.watchUpdateUserStream([opponentId])
+          ],
+          duration: kSlowThrottleDuration,
+        );
+        return stream.map((event) {
+          if (event == null) context.accountServer.refreshUsers([opponentId]);
+          return event;
         });
       }
       return Stream.value(null);
@@ -71,8 +85,8 @@ class _TransferPage extends HookWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               Spacer(),
               Padding(
                 padding: EdgeInsets.only(right: 12, top: 12),
@@ -259,6 +273,11 @@ class _TransactionDetailInfo extends StatelessWidget {
             title: Text(context.l10n.transactionId),
             subtitle: SelectableText(snapshot.snapshotId),
           ),
+          if (snapshot.snapshotHash?.isNotEmpty ?? false)
+            TransactionInfoTile(
+              title: Text(context.l10n.snapshotHash),
+              subtitle: SelectableText(snapshot.snapshotHash!),
+            ),
           TransactionInfoTile(
             title: Text(context.l10n.assetType),
             subtitle: SelectableText(snapshot.symbolName ?? ''),
@@ -333,6 +352,20 @@ class _TransactionDetailInfo extends StatelessWidget {
             TransactionInfoTile(
               title: Text(context.l10n.memo),
               subtitle: SelectableText(snapshot.memo!),
+            ),
+          if ((snapshot.openingBalance?.isNotEmpty ?? false) &&
+              (snapshot.symbol?.isNotEmpty ?? false))
+            TransactionInfoTile(
+              title: Text(context.l10n.openingBalance),
+              subtitle: SelectableText(
+                  '${snapshot.openingBalance!} ${snapshot.symbol!}'),
+            ),
+          if ((snapshot.closingBalance?.isNotEmpty ?? false) &&
+              (snapshot.symbol?.isNotEmpty ?? false))
+            TransactionInfoTile(
+              title: Text(context.l10n.closingBalance),
+              subtitle: SelectableText(
+                  '${snapshot.closingBalance ?? ''} ${snapshot.symbol ?? ''}'),
             ),
           TransactionInfoTile(
             title: Text(context.l10n.time),

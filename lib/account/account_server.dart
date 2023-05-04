@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:mixin_bot_sdk_dart/mixin_bot_sdk_dart.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/isolate_channel.dart';
-import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 
 import '../blaze/blaze.dart';
@@ -25,8 +24,8 @@ import '../db/dao/asset_dao.dart';
 import '../db/dao/sticker_album_dao.dart';
 import '../db/dao/sticker_dao.dart';
 import '../db/database.dart';
-import '../db/database_event_bus.dart';
 import '../db/extension/job.dart';
+import '../db/fts_database.dart';
 import '../db/mixin_database.dart' as db;
 import '../enum/encrypt_category.dart';
 import '../enum/message_category.dart';
@@ -37,7 +36,6 @@ import '../utils/attachment/download_key_value.dart';
 import '../utils/extension/extension.dart';
 import '../utils/file.dart';
 import '../utils/hive_key_values.dart';
-import '../utils/load_balancer_utils.dart';
 import '../utils/logger.dart';
 import '../utils/mixin_api_client.dart';
 import '../utils/web_view/web_view_interface.dart';
@@ -153,7 +151,9 @@ class AccountServer {
 
   Future<void> _initDatabase() async {
     database = Database(
-        await db.connectToDatabase(identityNumber, fromMainIsolate: true));
+      await db.connectToDatabase(identityNumber, fromMainIsolate: true),
+      await FtsDatabase.connect(identityNumber, fromMainIsolate: true),
+    );
 
     attachmentUtil = AttachmentUtil.init(
       client,
@@ -161,7 +161,8 @@ class AccountServer {
       database.transcriptMessageDao,
       identityNumber,
     );
-    _sendMessageHelper = SendMessageHelper(database, attachmentUtil);
+    _sendMessageHelper =
+        SendMessageHelper(database, attachmentUtil, addSendingJob);
 
     _injector = Injector(userId, database, client);
   }
@@ -247,10 +248,6 @@ class AccountServer {
         break;
       case WorkerIsolateEventType.onBlazeConnectStateChanged:
         _connectedStateBehaviorSubject.add(event.argument as ConnectedState);
-        break;
-      case WorkerIsolateEventType.onDbEvent:
-        final args = event.argument as Tuple2<DatabaseEvent, dynamic>;
-        database.mixinDatabase.eventBus.send(args.item1, args.item2);
         break;
       case WorkerIsolateEventType.onApiRequestedError:
         _onClientRequestError(event.argument as DioError);
@@ -599,25 +596,68 @@ class AccountServer {
     );
   }
 
+  void addAckJob(db.Job job) {
+    assert(job.action == kAcknowledgeMessageReceipts);
+    _sendEventToWorkerIsolate(
+      MainIsolateEventType.addAckJob,
+      job,
+    );
+  }
+
+  void addSessionAckJob(db.Job job) {
+    assert(job.action == kCreateMessage);
+    _sendEventToWorkerIsolate(
+      MainIsolateEventType.addSessionAckJob,
+      job,
+    );
+  }
+
+  void addSendingJob(db.Job job) {
+    assert(job.action == kSendingMessage ||
+        job.action == kPinMessage ||
+        job.action == kRecallMessage);
+    _sendEventToWorkerIsolate(
+      MainIsolateEventType.addSendingJob,
+      job,
+    );
+  }
+
+  void addUpdateAssetJob(db.Job job) {
+    assert(job.action == kUpdateAsset);
+    _sendEventToWorkerIsolate(
+      MainIsolateEventType.addUpdateAssetJob,
+      job,
+    );
+  }
+
+  void addUpdateStickerJob(db.Job job) {
+    assert(job.action == kUpdateSticker);
+    _sendEventToWorkerIsolate(
+      MainIsolateEventType.addUpdateStickerJob,
+      job,
+    );
+  }
+
   Future<void> markRead(String conversationId) async {
-    while (true) {
-      final ids = await database.messageDao
-          .getUnreadMessageIds(conversationId, userId, kMarkLimit);
-      if (ids.isEmpty) return;
+    final ids =
+        await database.messageDao.getUnreadMessageIds(conversationId, userId);
+
+    if (ids.isEmpty) return;
+
+    final chunked = ids.chunked(kMarkLimit);
+
+    for (final ids in chunked) {
       final expireAt = await database.expiredMessageDao.getMessageExpireAt(ids);
-      final jobs = ids
-          .map(
-            (id) => createAckJob(
-              kAcknowledgeMessageReceipts,
-              id,
-              MessageStatus.read,
-              expireAt: expireAt[id],
-            ),
-          )
-          .toList();
-      await database.jobDao.insertAll(jobs);
+      ids.forEach(
+        (id) => addAckJob(createAckJob(
+          kAcknowledgeMessageReceipts,
+          id,
+          MessageStatus.read,
+          expireAt: expireAt[id],
+        )),
+      );
+
       await _createReadSessionMessage(ids, expireAt);
-      if (ids.length < kMarkLimit) return;
     }
   }
 
@@ -629,15 +669,12 @@ class AccountServer {
     if (primarySessionId == null) {
       return;
     }
-    final jobs = messageIds
-        .map((id) => createAckJob(
-              kCreateMessage,
-              id,
-              MessageStatus.read,
-              expireAt: messageExpireAt[id],
-            ))
-        .toList();
-    await database.jobDao.insertAll(jobs);
+    messageIds.forEach((id) => addSessionAckJob(createAckJob(
+          kCreateMessage,
+          id,
+          MessageStatus.read,
+          expireAt: messageExpireAt[id],
+        )));
   }
 
   Future<void> stop() async {
@@ -1011,7 +1048,7 @@ class AccountServer {
           conversationId: conversationId,
           userId: userId)
     ]);
-    await database.circleConversationDao.deleteByIds(conversationId, circleId);
+    await database.circleConversationDao.deleteById(conversationId, circleId);
   }
 
   Future<void> editCircleConversation(
@@ -1184,20 +1221,8 @@ class AccountServer {
   Future<void> markMentionRead(String messageId, String conversationId) =>
       Future.wait([
         database.messageMentionDao.markMentionRead(messageId),
-        (() async => database.jobDao.insert(
-              db.Job(
-                jobId: const Uuid().v4(),
-                action: kCreateMessage,
-                createdAt: DateTime.now(),
-                conversationId: conversationId,
-                runCount: 0,
-                priority: 5,
-                blazeMessage: await jsonEncodeWithIsolate(BlazeAckMessage(
-                  messageId: messageId,
-                  status: 'MENTION_READ',
-                  expireAt: null,
-                )),
-              ),
+        (() async => addSessionAckJob(
+              await createMentionReadAckJob(conversationId, messageId),
             ))()
       ]);
 
@@ -1259,6 +1284,7 @@ class AccountServer {
     if (message == null) return;
     await database.messageDao.deleteMessage(message.conversationId, messageId);
 
+    unawaited(database.ftsDatabase.deleteByMessageId(messageId));
     unawaited(_deleteMessageAttachment(message));
   }
 
@@ -1316,21 +1342,30 @@ class AccountServer {
     return snapshot;
   }
 
-  Future<void> updateAssetById({required String assetId}) =>
-      database.jobDao.insertUpdateAssetJob(assetId);
+  void updateAssetById({required String assetId}) =>
+      addUpdateAssetJob(createUpdateAssetJob(assetId));
 
-  Future<AssetItem?> checkAsset({required String assetId}) async {
+  Future<AssetItem?> checkAsset(
+      {required String assetId, bool force = false}) async {
     final asset = await database.assetDao.findAssetById(assetId);
-    if (asset == null) {
+    if (force || asset == null) {
       try {
         final a = (await client.assetApi.getAssetById(assetId)).data;
-        await database.assetDao.insertSdkAsset(a);
-        await checkAsset(assetId: a.chainId);
+        final chain = (await client.assetApi.getChain(a.chainId)).data;
+
+        await Future.wait([
+          database.assetDao.insertSdkAsset(a),
+          database.chainDao.insertSdkChain(chain),
+        ]);
       } catch (error, stacktrace) {
         e('checkAsset: $error $stacktrace');
       }
-    } else if (assetId != asset.chainId) {
-      await checkAsset(assetId: asset.chainId);
+    } else {
+      final chain =
+          await database.chainDao.chain(asset.chainId).getSingleOrNull();
+      if (chain == null) {
+        await checkAsset(assetId: assetId, force: true);
+      }
     }
     return database.assetDao.assetItem(assetId).getSingleOrNull();
   }

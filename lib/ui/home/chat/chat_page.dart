@@ -14,6 +14,7 @@ import '../../../account/show_pin_message_key_value.dart';
 import '../../../bloc/simple_cubit.dart';
 import '../../../bloc/subscribe_mixin.dart';
 import '../../../constants/resources.dart';
+import '../../../db/database_event_bus.dart';
 import '../../../utils/extension/extension.dart';
 import '../../../utils/hook.dart';
 import '../../../widgets/action_button.dart';
@@ -467,14 +468,14 @@ class ChatContainer extends HookWidget {
                                       ),
                                     ),
                                   ),
-                                  child: Stack(
+                                  child: const Stack(
                                     children: [
-                                      const RepaintBoundary(
+                                      RepaintBoundary(
                                         child: _NotificationListener(
                                           child: _List(),
                                         ),
                                       ),
-                                      const Positioned(
+                                      Positioned(
                                         left: 6,
                                         right: 6,
                                         bottom: 6,
@@ -485,13 +486,13 @@ class ChatContainer extends HookWidget {
                                         right: 16,
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
-                                          children: const [
+                                          children: [
                                             _JumpMentionButton(),
                                             _JumpCurrentButton(),
                                           ],
                                         ),
                                       ),
-                                      const _PinMessagesBanner(),
+                                      _PinMessagesBanner(),
                                     ],
                                   ),
                                 ),
@@ -939,8 +940,15 @@ class _JumpMentionButton extends HookWidget {
     )!;
     final messageMentions = useMemoizedStream(
             () => context.database.messageMentionDao
-                .unreadMentionMessageByConversationId(conversationId)
-                .watchThrottle(kSlowThrottleDuration),
+                    .unreadMentionMessageByConversationId(conversationId)
+                    .watchWithStream(
+                  eventStreams: [
+                    DataBaseEventBus.instance.watchUpdateMessageMention(
+                      conversationIds: [conversationId],
+                    )
+                  ],
+                  duration: kSlowThrottleDuration,
+                ),
             keys: [conversationId]).data ??
         [];
 
@@ -1130,9 +1138,7 @@ class _ConversationHandle extends ConversationMenuHandle {
       context.l10n.conversationDeleteTitle(name),
       description: context.l10n.deleteChatDescription,
     );
-    if (!ret) {
-      return;
-    }
+    if (ret == null) return;
     await context.database.conversationDao.deleteConversation(conversationId);
     await context.database.pinMessageDao.deleteByConversationId(conversationId);
     if (context.read<ConversationCubit>().state?.conversationId ==

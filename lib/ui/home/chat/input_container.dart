@@ -9,11 +9,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mixin_bot_sdk_dart/mixin_bot_sdk_dart.dart' hide StickerAlbum;
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../constants/constants.dart';
 import '../../../constants/resources.dart';
+import '../../../db/database_event_bus.dart';
 import '../../../db/mixin_database.dart' hide Offset;
 import '../../../enum/encrypt_category.dart';
 import '../../../utils/app_lifecycle.dart';
@@ -58,6 +60,12 @@ class InputContainer extends HookWidget {
         useBlocStateConverter<ConversationCubit, ConversationState?, bool>(
       converter: (state) {
         if (state?.conversation == null) return true;
+        if (state?.conversation?.category == ConversationCategory.contact) {
+          return true;
+        }
+        if (state?.conversation?.status == ConversationStatus.quit) {
+          return false;
+        }
         return state?.participant != null;
       },
     );
@@ -67,7 +75,7 @@ class InputContainer extends HookWidget {
     }, [conversationId]);
 
     final voiceRecorderCubit = useBloc(
-      VoiceRecorderCubit.new,
+      () => VoiceRecorderCubit(context.audioMessageService),
       keys: [conversationId],
     );
 
@@ -117,6 +125,10 @@ class _InputContainer extends HookWidget {
           (state?.isLoaded ?? false) ? state?.conversationId : null,
     );
 
+    final originalDraft = useMemoized(
+        () => context.read<ConversationCubit>().state?.conversation?.draft,
+        [conversationId]);
+
     final quoteMessageId =
         useBlocStateConverter<QuoteMessageCubit, MessageItem?, String?>(
       converter: (state) => state?.messageId,
@@ -151,6 +163,8 @@ class _InputContainer extends HookWidget {
       final updateDraft = context.database.conversationDao.updateDraft;
       return () {
         if (conversationId == null) return;
+        if (textEditingController.text == originalDraft) return;
+
         updateDraft(
           conversationId,
           textEditingController.text,
@@ -532,19 +546,20 @@ class _SendTextField extends HookWidget {
             if (!hasInputText)
               Positioned.fill(
                 left: 8,
-                top: 7,
-                child: IgnorePointer(
-                  child: Text(
-                    isEncryptConversation
-                        ? context.l10n.chatHintE2e
-                        : context.l10n.typeMessage,
-                    style: TextStyle(
-                      color: context.theme.secondaryText,
-                      fontSize: 14,
-                      height: 1,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IgnorePointer(
+                    child: Text(
+                      isEncryptConversation
+                          ? context.l10n.chatHintE2e
+                          : context.l10n.typeMessage,
+                      style: TextStyle(
+                        color: context.theme.secondaryText,
+                        fontSize: 14,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               )
@@ -691,9 +706,11 @@ class _StickerButton extends HookWidget {
     final key = useMemoized(GlobalKey.new);
 
     final stickerAlbumsCubit = useBloc(
-      () => StickerAlbumsCubit(context.database.stickerAlbumDao
-          .systemAddedAlbums()
-          .watchThrottle(kVerySlowThrottleDuration)),
+      () => StickerAlbumsCubit(
+          context.database.stickerAlbumDao.systemAddedAlbums().watchWithStream(
+        eventStreams: [DataBaseEventBus.instance.updateStickerStream],
+        duration: kVerySlowThrottleDuration,
+      )),
     );
 
     final presetStickerGroups = useMemoized(

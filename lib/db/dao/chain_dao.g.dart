@@ -16,7 +16,6 @@ mixin _$ChainDaoMixin on DatabaseAccessor<MixinDatabase> {
   Jobs get jobs => attachedDatabase.jobs;
   MessageMentions get messageMentions => attachedDatabase.messageMentions;
   Messages get messages => attachedDatabase.messages;
-  MessagesFts get messagesFts => attachedDatabase.messagesFts;
   MessagesHistory get messagesHistory => attachedDatabase.messagesHistory;
   Offsets get offsets => attachedDatabase.offsets;
   ParticipantSession get participantSession =>

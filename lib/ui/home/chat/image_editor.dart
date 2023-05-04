@@ -49,8 +49,8 @@ class _ImageEditorDialog extends HookWidget {
     final image = useMemoizedFuture<ui.Image?>(() async {
       final bytes = File(path).readAsBytesSync();
       final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
-      final codec = await PaintingBinding.instance
-          .instantiateImageCodecFromBuffer(buffer);
+      final codec =
+          await PaintingBinding.instance.instantiateImageCodecWithSize(buffer);
       final frame = await codec.getNextFrame();
       return frame.image;
     }, null, keys: [path]);
@@ -401,6 +401,7 @@ class _ImageEditorBloc extends Cubit<_ImageEditorState> with SubscribeMixin {
       width: image.width,
       height: image.height,
       bytes: bytes.buffer,
+      order: img.ChannelOrder.rgba,
     );
 
     if (state.flip) {
@@ -1429,9 +1430,7 @@ class _NormalOperationBar extends HookWidget {
                     context,
                     context.l10n.editImageClearWarning,
                   );
-                  if (!result) {
-                    return;
-                  }
+                  if (result == null) return;
                 }
                 await Navigator.maybePop(context);
               },

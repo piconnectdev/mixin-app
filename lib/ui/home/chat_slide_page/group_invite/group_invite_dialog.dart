@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../constants/resources.dart';
+import '../../../../db/database_event_bus.dart';
 import '../../../../db/mixin_database.dart';
 import '../../../../utils/extension/extension.dart';
 import '../../../../utils/hook.dart';
@@ -37,7 +38,13 @@ class _GroupInviteByLinkDialog extends HookWidget {
         context.accountServer.refreshConversation(conversationId);
         return context.database.conversationDao
             .conversationById(conversationId)
-            .watchSingleOrNullThrottle(kDefaultThrottleDuration);
+            .watchSingleOrNullWithStream(
+          eventStreams: [
+            DataBaseEventBus.instance
+                .watchUpdateConversationStream([conversationId]),
+          ],
+          duration: kDefaultThrottleDuration,
+        );
       },
       keys: [conversationId],
     ).data;
@@ -166,15 +173,16 @@ class _ActionButtons extends StatelessWidget {
               ));
             },
           ),
-          _IconButton(
-            label: context.l10n.copyInvite,
-            iconAssetName: Resources.assetsImagesInviteCopySvg,
-            onTap: () async {
-              await Clipboard.setData(
-                  ClipboardData(text: conversation.codeUrl));
-              showToastSuccessful();
-            },
-          ),
+          if (conversation.codeUrl != null)
+            _IconButton(
+              label: context.l10n.copyInvite,
+              iconAssetName: Resources.assetsImagesInviteCopySvg,
+              onTap: () async {
+                final codeUrl = conversation.codeUrl;
+                await Clipboard.setData(ClipboardData(text: codeUrl!));
+                showToastSuccessful();
+              },
+            ),
           _IconButton(
             label: context.l10n.resetLink,
             iconAssetName: Resources.assetsImagesInviteRefreshSvg,

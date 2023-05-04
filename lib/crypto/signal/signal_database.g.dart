@@ -161,15 +161,18 @@ class SenderKeysCompanion extends UpdateCompanion<SenderKey> {
   final Value<String> groupId;
   final Value<String> senderId;
   final Value<Uint8List> record;
+  final Value<int> rowid;
   const SenderKeysCompanion({
     this.groupId = const Value.absent(),
     this.senderId = const Value.absent(),
     this.record = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   SenderKeysCompanion.insert({
     required String groupId,
     required String senderId,
     required Uint8List record,
+    this.rowid = const Value.absent(),
   })  : groupId = Value(groupId),
         senderId = Value(senderId),
         record = Value(record);
@@ -177,22 +180,26 @@ class SenderKeysCompanion extends UpdateCompanion<SenderKey> {
     Expression<String>? groupId,
     Expression<String>? senderId,
     Expression<Uint8List>? record,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (groupId != null) 'group_id': groupId,
       if (senderId != null) 'sender_id': senderId,
       if (record != null) 'record': record,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   SenderKeysCompanion copyWith(
       {Value<String>? groupId,
       Value<String>? senderId,
-      Value<Uint8List>? record}) {
+      Value<Uint8List>? record,
+      Value<int>? rowid}) {
     return SenderKeysCompanion(
       groupId: groupId ?? this.groupId,
       senderId: senderId ?? this.senderId,
       record: record ?? this.record,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -208,6 +215,9 @@ class SenderKeysCompanion extends UpdateCompanion<SenderKey> {
     if (record.present) {
       map['record'] = Variable<Uint8List>(record.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -216,7 +226,8 @@ class SenderKeysCompanion extends UpdateCompanion<SenderKey> {
     return (StringBuffer('SenderKeysCompanion(')
           ..write('groupId: $groupId, ')
           ..write('senderId: $senderId, ')
-          ..write('record: $record')
+          ..write('record: $record, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1584,12 +1595,14 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
   final Value<String> status;
   final Value<String?> messageId;
   final Value<String> createdAt;
+  final Value<int> rowid;
   const RatchetSenderKeysCompanion({
     this.groupId = const Value.absent(),
     this.senderId = const Value.absent(),
     this.status = const Value.absent(),
     this.messageId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   RatchetSenderKeysCompanion.insert({
     required String groupId,
@@ -1597,6 +1610,7 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
     required String status,
     this.messageId = const Value.absent(),
     required String createdAt,
+    this.rowid = const Value.absent(),
   })  : groupId = Value(groupId),
         senderId = Value(senderId),
         status = Value(status),
@@ -1607,6 +1621,7 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
     Expression<String>? status,
     Expression<String>? messageId,
     Expression<String>? createdAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (groupId != null) 'group_id': groupId,
@@ -1614,6 +1629,7 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
       if (status != null) 'status': status,
       if (messageId != null) 'message_id': messageId,
       if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -1622,13 +1638,15 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
       Value<String>? senderId,
       Value<String>? status,
       Value<String?>? messageId,
-      Value<String>? createdAt}) {
+      Value<String>? createdAt,
+      Value<int>? rowid}) {
     return RatchetSenderKeysCompanion(
       groupId: groupId ?? this.groupId,
       senderId: senderId ?? this.senderId,
       status: status ?? this.status,
       messageId: messageId ?? this.messageId,
       createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1650,6 +1668,9 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -1660,7 +1681,8 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
           ..write('senderId: $senderId, ')
           ..write('status: $status, ')
           ..write('messageId: $messageId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1668,7 +1690,6 @@ class RatchetSenderKeysCompanion extends UpdateCompanion<RatchetSenderKey> {
 
 abstract class _$SignalDatabase extends GeneratedDatabase {
   _$SignalDatabase(QueryExecutor e) : super(e);
-  _$SignalDatabase.connect(DatabaseConnection c) : super.connect(c);
   late final SenderKeys senderKeys = SenderKeys(this);
   late final Identities identities = Identities(this);
   late final Index indexIdentitiesAddress = Index('index_identities_address',
